@@ -1,0 +1,7 @@
+{
+  "extends": ["react-app", "plugin:prettier/recommended"],
+  "rules": {
+    "linebreak-style": 0,
+    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+  }
+}
