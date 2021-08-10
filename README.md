@@ -1,4 +1,4 @@
-## 3st Project "Letter.log"
+## 3rd Project "Letter.log"
 
 ### Letter.log Project
 
@@ -8,11 +8,8 @@
 
 ### 기술스택
 
-html
-css
-js
-react
-styled-component
-recoil
-react-query
-axios
+- react
+- styled-components
+- recoil
+- react-query
+- axios
