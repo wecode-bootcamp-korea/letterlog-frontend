@@ -8,7 +8,7 @@ const Nav = () => {
         <Logo href="/">LETTER LOG</Logo>
         <NavRight>
           <IconSearch>
-            <i class="fas fa-search"></i>
+            <i className="fas fa-search"></i>
           </IconSearch>
           <InputSearch placeholder="우체통을 검색해주세요." />
           <CreatePostBtn>우체통 만들기</CreatePostBtn>
@@ -26,6 +26,7 @@ const NavSection = styled.div`
   width: 100%;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
   z-index: 999;
+  background-color: #ffff;
 `;
 
 const ContentContainer = styled.div`
