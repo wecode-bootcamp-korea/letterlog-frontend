@@ -1,18 +1,40 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Modal from '../Modal/Modal';
+import { useRecoilState } from 'recoil';
+import { modalState } from '../../atom';
+import ModalChild from './PostModal/ModalChild';
 
 const Nav = () => {
+  const [isModalOpen, setIsModalOpen] = useRecoilState(modalState);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    document.body.style.overflow = 'unset';
+  };
+
   return (
     <NavSection>
       <ContentContainer>
-        <Logo href="/">LETTER LOG</Logo>
-        <NavRight>
+        <Logo to="/">LETTER LOG</Logo>
+        <NavIconConttainer>
           <IconSearch>
             <i className="fas fa-search"></i>
           </IconSearch>
           <InputSearch placeholder="우체통을 검색해주세요." />
-          <CreatePostBtn>우체통 만들기</CreatePostBtn>
-        </NavRight>
+          {isModalOpen && (
+            <Modal closeModal={closeModal}>
+              <ModalChild closeModal={closeModal} />
+            </Modal>
+          )}
+          <CreatePostBtn onClick={handleModalOpen}>우체통 만들기</CreatePostBtn>
+        </NavIconConttainer>
       </ContentContainer>
     </NavSection>
   );
@@ -32,17 +54,17 @@ const NavSection = styled.div`
 const ContentContainer = styled.div`
   ${({ theme }) => theme.setFlex('space-between')}
   height: 111px;
-  padding: 0 8vw;
+  padding: 0 120px;
 `;
 
-const Logo = styled.a`
+const Logo = styled(Link)`
   text-decoration: none;
   font-size: 18px;
   font-weight: 800;
   color: ${({ theme }) => theme.fontColor};
 `;
 
-const NavRight = styled.div`
+const NavIconConttainer = styled.div`
   ${({ theme }) => theme.setFlex('stretch')}
 `;
 

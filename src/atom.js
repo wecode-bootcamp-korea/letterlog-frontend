@@ -15,3 +15,8 @@ export const boxIdState = atom({
   key: 'boxId',
   default: '',
 });
+
+export const modalState = atom({
+  key: 'modalState',
+  default: false,
+});
