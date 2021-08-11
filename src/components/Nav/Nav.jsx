@@ -1,33 +1,39 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
-import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { searchInputState } from '../../atom';
+import Modal from '../Modal/Modal';
+import { useRecoilState } from 'recoil';
+import { modalState } from '../../atom';
+import ModalChild from './PostModal/PostCreateForm';
 
 const Nav = () => {
-  const history = useHistory();
+  const [isModalOpen, setIsModalOpen] = useRecoilState(modalState);
 
-  const setSearchInput = useSetRecoilState(searchInputState);
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
 
-  const InputKeyEnter = e => {
-    e.key === 'Enter' && history.push('/search');
+  const closeModal = () => {
+    setIsModalOpen(false);
+    document.body.style.overflow = 'unset';
   };
 
   return (
     <Section>
       <Container>
-        <Logo href="/">LETTER LOG</Logo>
+        <Logo to="/">LETTER LOG</Logo>
         <Menu>
           <IconSearch>
             <i className="fas fa-search"></i>
           </IconSearch>
-          <InputSearch
-            onChange={e => setSearchInput(e.target.value)}
-            onKeyPress={InputKeyEnter}
-            type="search"
-            placeholder="우체통을 검색해주세요."
-          />
-          <CreatePostBtn>우체통 만들기</CreatePostBtn>
+          <InputSearch placeholder="우체통을 검색해주세요." />
+          {isModalOpen && (
+            <Modal closeModal={closeModal}>
+              <ModalChild isModalOpen={isModalOpen} />
+            </Modal>
+          )}
+          <CreatePostBtn onClick={handleModalOpen}>우체통 만들기</CreatePostBtn>
         </Menu>
       </Container>
     </Section>
@@ -48,10 +54,10 @@ const Section = styled.div`
 const Container = styled.div`
   ${({ theme }) => theme.setFlex('space-between')}
   height: 111px;
-  padding: 0 8vw;
+  padding: 0 120px;
 `;
 
-const Logo = styled.a`
+const Logo = styled(Link)`
   text-decoration: none;
   font-size: 18px;
   font-weight: 800;
