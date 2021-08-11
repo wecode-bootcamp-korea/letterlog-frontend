@@ -1,52 +1,69 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import EmailList from './EmailList';
+import { BASE_URL } from '../../../config';
 
-// import { useRecoilState } from 'recoil';
-// import { emailListState, emailTextState } from '../../../atom';
+import { useRecoilState } from 'recoil';
+import {
+  emailListState,
+  emailTextState,
+  createFormDataState,
+} from '../../../atom';
 
 const CreatePostModal = props => {
-  // const [emailList, setEmailList] = useRecoilState(emailListState);
-  // const [emailText, setEmailText] = useRecoilState(emailTextState);
+  const [emailText, setEmailText] = useRecoilState(emailTextState);
+  const [emailList, setEmailList] = useRecoilState(emailListState);
+  const [createFormData, setCreateFormData] =
+    useRecoilState(createFormDataState);
+
+  // const [emailText, setEmailText] = useState('');
+  // const [emailList, setEmailList] = useState({
+  //   receivers: [],
+  // });
+  // const [createFormData, setCreateFormData] = useState({
+  //   name: '',
+  //   password: '',
+  //   is_public: '',
+  //   send_at: '',
+  // });
 
   const handleinputEmail = e => {
     setEmailText(e.target.value);
   };
 
-  const [emailList, setEmailList] = useState([]);
-  const [emailText, setEmailText] = useState('');
-  const [createFormData, setCreateFormData] = useState({
-    name: '',
-    password: '',
-    is_public: '',
-    send_at: '',
-    receivers: [],
-  });
-
-  const handleFromData = e => {
-    const { name, value } = e.target;
-    setCreateFormData({ ...createFormData, [name]: value });
-  };
-
-  console.log('formData', createFormData);
-
-  const onCreateSubmit = () => {
-    console.log('Submit 서버에 보내기');
-  };
-
   const handleAddEmail = () => {
     if (emailText !== '') {
-      if (emailText.includes('@') && !emailList.includes(emailText)) {
-        emailList.push(emailText);
-      } else if (emailList.includes(emailText)) {
-        alert('중복된 이메일입니다.');
+      if (emailText.includes('@')) {
+        emailList.receivers.concat({ email: emailText });
       } else {
-        alert('이메일 양식에 맞춰 작성해주세요.');
+        alert('메일 양식에 맞춰 작성해주세요.');
       }
     }
 
     setEmailList(emailList);
     setEmailText('');
+  };
+
+  console.log('text', emailText);
+  console.log('list', emailList);
+
+  const handleFromData = e => {
+    const { name, value } = e.target;
+    setCreateFormData({ ...createFormData, [name]: value });
+
+    console.log(`FormData`, createFormData);
+  };
+
+  const onCreateSubmit = () => {
+    console.log('Submit');
+
+    axios
+      .post(`${BASE_URL}/postboxes/create`, {
+        createFormData,
+      })
+      .then(res => alert('성공', res))
+      .catch(alert('에러'));
   };
 
   const emailInputKeypress = e => {
@@ -96,8 +113,8 @@ const CreatePostModal = props => {
             추가
           </EmailAddBtn>
         </CreateContainer>
-        {emailList &&
-          emailList.map((email, id) => {
+        {emailList.receivers &&
+          emailList.receivers.map((email, id) => {
             return (
               <EmailList email={email} id={id} removeEmail={removeEmail} />
             );

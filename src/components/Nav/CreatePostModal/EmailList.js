@@ -5,6 +5,7 @@ const EmailList = (email, id, removeEmail) => {
   return (
     <Email>
       {email.email}
+      asdasdasd
       <RemoveEmail onClick={() => email.removeEmail(email.id)}>
         &times;
       </RemoveEmail>

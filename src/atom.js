@@ -7,10 +7,20 @@ export const createModalState = atom({
 
 export const emailListState = atom({
   key: 'emailListState',
-  default: [],
+  default: { receivers: [] },
 });
 
 export const emailTextState = atom({
   key: 'emailTextState',
   default: '',
+});
+
+export const createFormDataState = atom({
+  key: 'createFormDataState',
+  default: {
+    name: '',
+    password: '',
+    is_public: '',
+    send_at: '',
+  },
 });
