@@ -1,7 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import CreatePostModal from './CreatePostModal/CreatePostModal';
+import { useRecoilState } from 'recoil';
+import { createModalState } from '../../atom';
 
 const Nav = () => {
+  const [isModalOpen, setIsModalOpen] = useRecoilState(createModalState);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    document.body.style.overflow = 'unset';
+  };
+
   return (
     <NavSection>
       <ContentContainer>
@@ -11,7 +26,8 @@ const Nav = () => {
             <i class="fas fa-search"></i>
           </IconSearch>
           <InputSearch placeholder="우체통을 검색해주세요." />
-          <CreatePostBtn>우체통 만들기</CreatePostBtn>
+          {isModalOpen && <CreatePostModal closeModal={closeModal} />}
+          <CreatePostBtn onClick={handleModalOpen}>우체통 만들기</CreatePostBtn>
         </NavRight>
       </ContentContainer>
     </NavSection>
