@@ -8,7 +8,7 @@ const Nav = () => {
         <Logo href="/">LETTER LOG</Logo>
         <NavRight>
           <IconSearch>
-            <i class="fas fa-search"></i>
+            <i className="fas fa-search"></i>
           </IconSearch>
           <InputSearch placeholder="우체통을 검색해주세요." />
           <CreatePostBtn>우체통 만들기</CreatePostBtn>
