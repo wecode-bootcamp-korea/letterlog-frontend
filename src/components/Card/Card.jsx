@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useState, useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import styled from 'styled-components';
 import Modal from '../Modal/Modal';
-import { SEND_API, SEND_PW } from '../../config';
-import { selectedFilesState, boxIdState } from '../../atom';
+import { POSTBOXES_API } from '../../config';
+import { selectedFilesState } from '../../atom';
 import { chkPwd } from '../../Validation/Validation';
 import PostBox from '../../pages/Images/postBox.jpg';
+
+import PwModal from '../Modal/components/PwModal';
+import MainModal from '../Modal/components/MainModal';
+import { modalState } from '../../atom';
 
 const Card = ({ letterBox }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [openPw, setOpenPw] = useState(false);
+  const setIsModal = useSetRecoilState(modalState);
+
+  const [selectedFiles, setSelectedFiles] = useState(null);
   const [formValues, setFormValues] = useState({
-    // selectedFiles: null, // 왜 파일 업로드가 안될까요?
     nameInput: '',
     textInput: '',
     pwInput: '',
+    boxId: '',
   });
-  const [selectedFiles, setSelectedFiles] = useRecoilState(selectedFilesState);
 
+  //모달 온오프
   const openModal = () => {
+    setFormValues({ boxId: letterBox.id });
     if (letterBox.is_public === true) {
       setModalOpen(true);
       document.body.style.overflow = 'hidden';
@@ -30,7 +38,8 @@ const Card = ({ letterBox }) => {
     }
   };
 
-  const closeModal = () => {
+  //메일 전송 완료 시 닫는 함수
+  const closeModalState = () => {
     setModalOpen(false);
     setOpenPw(false);
     document.body.style.overflow = 'unset';
@@ -45,18 +54,71 @@ const Card = ({ letterBox }) => {
     setSelectedFiles(e.target.files[0]);
   };
 
+  // 이메일 보내기 // to collection
   const sendMail = () => {
+    let token = localStorage.getItem('TOKEN') || '';
     const formData = new FormData();
     formData.append('image_url', selectedFiles);
     formData.append('nickname', formValues.nameInput);
     formData.append('caption', formValues.textInput);
     const config = {
       headers: {
+        Authorization: token,
         'content-type': 'multipart/form-data',
       },
     };
-    axios.post(`${SEND_API}`, formData, config);
-    closeModal();
+    if (
+      formValues.nameInput &&
+      formValues.textInput &&
+      selectedFiles !== null
+    ) {
+      axios.post(
+        `${POSTBOXES_API}/${formValues.boxId}/sending`,
+        formData,
+        config
+      );
+      //  .then(res => res.json())
+      // .then(res => {
+      //   {
+      //     localStorage.setItem('message', res.data.message);
+      //   }
+      // });
+      alert('전송완료');
+      setSelectedFiles(null);
+      localStorage.removeItem('TOKEN');
+      setFormValues({ nameInput: '', textInput: '' });
+      closeModalState();
+    } else alert('정해진 양식을 채워주세요.');
+  };
+  // `${POSTBOXES_API}/${formValues.boxId}/signin`
+  // `${POSTBOXES_API}/access`;
+  const checkPw = () => {
+    if (chkPwd(formValues.pwInput)) {
+      fetch(`${POSTBOXES_API}/access`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: formValues.boxId,
+          password: formValues.pwInput,
+        }),
+      })
+        .then(res => res.json())
+        .then(res => {
+          if (res.accessToken) {
+            localStorage.setItem('TOKEN', res.accessToken);
+            // this.props.history.push('/');
+            setModalOpen(true);
+            setOpenPw(false);
+            setFormValues({ ...formValues, pwInput: '' });
+          } else {
+            alert('입력하신 비밀번호를 다시 확인해주세요.');
+          }
+        });
+    } else {
+      alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
+    }
   };
 
   return (
@@ -73,37 +135,17 @@ const Card = ({ letterBox }) => {
           </Button>
           {/* 모달창 */}
           {openPw && (
-            <Modal open={modalOpen} closeModal={closeModal} header="비밀번호">
-              <div>비민번호를 입력하세요</div>
-              <input type="password" name="pwInput" onChange={handleForm} />
-              <Footer>
-                <Close onClick={sendMail}>확인</Close>
-              </Footer>
+            <Modal open={modalOpen} header="비밀번호">
+              <PwModal handleForm={handleForm} checkPw={checkPw} />
             </Modal>
           )}
           {modalOpen && (
-            <Modal
-              open={modalOpen}
-              closeModal={closeModal}
-              header="이메일 보내기"
-            >
-              {/* props.children 들어가는 자리 */}
-              <div>닉네임</div>
-              {/* 닉네임 조건 걸어야 함 */}
-              <input type="text" name="nameInput" onChange={handleForm} />
-              <div>이미지 업로드</div>
-              {/* 이미지 업로드 post */}
-              <input
-                type="File"
-                name="selectedFiles"
-                onChange={fileChangedHandler}
+            <Modal open={modalOpen} header="이메일 보내기">
+              <MainModal
+                handleForm={handleForm}
+                fileChangedHandler={fileChangedHandler}
+                sendMail={sendMail}
               />
-              <div>텍스트(50자 이내)</div>
-              {/* 텍스트 조건 걸어야 함 */}
-              <input type="text" name="textInput" onChange={handleForm} />
-              <Footer>
-                <Close onClick={sendMail}>보내기</Close>
-              </Footer>
             </Modal>
           )}
         </Box>
@@ -131,21 +173,4 @@ const Button = styled.button`
   i {
     color: green;
   }
-`;
-
-const Footer = styled.div`
-  padding: 12px 16px;
-  text-align: right;
-`;
-
-const Close = styled.button`
-  outline: none;
-  cursor: pointer;
-  border: 0;
-
-  padding: 6px 12px;
-  color: #fff;
-  background-color: ${props => props.theme.mainColor};
-  border-radius: 5px;
-  font-size: 13px;
 `;
