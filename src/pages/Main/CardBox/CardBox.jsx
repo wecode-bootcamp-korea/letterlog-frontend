@@ -4,13 +4,32 @@ import Card from '../../../components/Card/Card';
 
 const CardBox = ({ letterBoxList }) => {
   return (
-    <Grid>
-      {letterBoxList.map((letterBox, idx) => (
-        <Card key={idx} letterBox={letterBox} />
-      ))}
-    </Grid>
+    <>
+      <Wrapper>
+        <Sort>전체</Sort>
+        <Sort>공개</Sort>
+        <Sort>비공개</Sort>
+      </Wrapper>
+      <Grid>
+        {letterBoxList.map((letterBox, idx) => (
+          <Card key={idx} letterBox={letterBox} />
+        ))}
+      </Grid>
+    </>
   );
 };
+
+const Wrapper = styled.div`
+  ${props => props.theme.setFlex('flex-end', 'center')};
+  width: 90%;
+  margin-top: 30px;
+`;
+
+const Sort = styled.button`
+  background-color: transparent;
+  border: 1px solid #1dbe8e;
+  cursor: pointer;
+`;
 
 const Grid = styled.div`
   display: grid;

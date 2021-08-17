@@ -10,8 +10,3 @@ export const selectedFilesState = atom({
   default: null,
   dangerouslyAllowMutability: true,
 });
-
-export const boxIdState = atom({
-  key: 'boxId',
-  default: '',
-});

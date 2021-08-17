@@ -12,8 +12,9 @@ const Main = () => {
   const [letterBoxList, setLetterBoxList] = useRecoilState(letterBoxState);
 
   useEffect(() => {
-    axios.get(`${POSTBOXES_API}`).then(({ data }) => {
+    axios.get(`${POSTBOXES_API}?status=`).then(({ data }) => {
       setLetterBoxList(data);
+      // setLetterBoxList(data.results.postboxes);
     });
   }, []);
 
@@ -29,7 +30,6 @@ const Container = styled.div`
   ${props => props.theme.setFlex('center', 'center')};
   flex-direction: column;
   margin-top: 111px;
-  /* background-color: green; */
   width: 100vw;
   height: 100%;
 `;
