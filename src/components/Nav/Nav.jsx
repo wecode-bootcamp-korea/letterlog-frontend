@@ -1,26 +1,42 @@
 import React from 'react';
+import { useSetRecoilState } from 'recoil';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+import { searchInputState } from '../../atom';
 
 const Nav = () => {
+  const history = useHistory();
+
+  const setSearchInput = useSetRecoilState(searchInputState);
+
+  const InputKeyEnter = e => {
+    e.key === 'Enter' && history.push('/search');
+  };
+
   return (
-    <NavSection>
-      <ContentContainer>
+    <Section>
+      <Container>
         <Logo href="/">LETTER LOG</Logo>
-        <NavRight>
+        <Menu>
           <IconSearch>
             <i className="fas fa-search"></i>
           </IconSearch>
-          <InputSearch placeholder="우체통을 검색해주세요." />
+          <InputSearch
+            onChange={e => setSearchInput(e.target.value)}
+            onKeyPress={InputKeyEnter}
+            type="search"
+            placeholder="우체통을 검색해주세요."
+          />
           <CreatePostBtn>우체통 만들기</CreatePostBtn>
-        </NavRight>
-      </ContentContainer>
-    </NavSection>
+        </Menu>
+      </Container>
+    </Section>
   );
 };
 
 export default Nav;
 
-const NavSection = styled.div`
+const Section = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
@@ -29,7 +45,7 @@ const NavSection = styled.div`
   background-color: #ffff;
 `;
 
-const ContentContainer = styled.div`
+const Container = styled.div`
   ${({ theme }) => theme.setFlex('space-between')}
   height: 111px;
   padding: 0 8vw;
@@ -42,7 +58,7 @@ const Logo = styled.a`
   color: ${({ theme }) => theme.fontColor};
 `;
 
-const NavRight = styled.div`
+const Menu = styled.div`
   ${({ theme }) => theme.setFlex('stretch')}
 `;
 
