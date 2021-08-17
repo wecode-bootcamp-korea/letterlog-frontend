@@ -1,12 +1,14 @@
 import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
+import { modalState } from '../../atom';
+
 const Modal = ({ header, children }) => {
-  const [modalState, setModalState] = useRecoilState(modalState);
+  const setIsModal = useSetRecoilState(modalState);
 
   const closeModal = () => {
-    setModalState(false);
+    setIsModal(false);
     document.body.style.overflow = 'unset';
   };
 

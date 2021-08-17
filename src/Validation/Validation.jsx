@@ -1,4 +1,4 @@
 export function chkPwd(pw) {
-  var reg_pwd = /^[0-9]+$/;
+  let reg_pwd = /^[a-zA-Z0-9]{8,15}$/;
   return !reg_pwd.test(pw) ? false : true;
 }
