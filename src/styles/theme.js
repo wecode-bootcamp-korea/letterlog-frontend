@@ -4,6 +4,7 @@ const theme = {
   cardBackground: '#F4F4F4',
   fontColor: '#1D1D1D',
   subFontColor: '#CBCBCB',
+  mainColor: '#1DBE8E',
 
   setFlex: (justifyContent = 'center', alignItem = 'center') => css`
     display: flex;

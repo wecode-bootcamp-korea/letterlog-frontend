@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Modal = props => {
-  const { closeModal, header } = props;
-
+const Modal = ({ closeModal, header, children }) => {
   return (
     <>
       <Wrapper>
@@ -12,7 +10,7 @@ const Modal = props => {
             {header}
             <Close onClick={closeModal}>&times;</Close>
           </Header>
-          <Main>{props.children}</Main>
+          <Main>{children}</Main>
         </Section>
       </Wrapper>
     </>
