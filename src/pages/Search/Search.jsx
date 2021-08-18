@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import CardBox from '../Main/CardBox/CardBox';
+
+import FilterCardBox from './FilterCardBox/FilterCardBox';
 import { POSTBOXES_API } from '../../config';
 import { useRecoilState } from 'recoil';
-import { letterBoxState } from '../../atom';
+import { searchInputSelector } from '../../atom';
 
 const Search = () => {
-  const [letterBoxList, setLetterBoxList] = useRecoilState(letterBoxState);
+  const [letterBoxList, setLetterBoxList] = useState([]);
+  const [searchInput] = useRecoilState(searchInputSelector);
 
   useEffect(() => {
     axios.get(`${POSTBOXES_API}`).then(({ data }) => {
@@ -15,12 +17,13 @@ const Search = () => {
     });
   }, []);
 
+  const filterPost = letterBoxList.filter(item => {
+    return item.name.includes(searchInput.toLowerCase());
+  }, []);
+
   return (
     <Container>
-      <div>
-        <input type="text" />
-      </div>
-      <CardBox letterBoxList={letterBoxList} />
+      <FilterCardBox filterPost={filterPost} />
     </Container>
   );
 };
@@ -30,5 +33,5 @@ export default Search;
 const Container = styled.div`
   ${props => props.theme.setFlex()}
   flex-direction: column;
-  margin: 140px 0 80px;
+  margin: 160px 0 80px;
 `;

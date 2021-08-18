@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 
 export const letterBoxState = atom({
   key: 'letterBoxState',
@@ -14,4 +14,18 @@ export const selectedFilesState = atom({
 export const boxIdState = atom({
   key: 'boxId',
   default: '',
+});
+
+// 검색 페이지 상태 관리
+export const searchInputState = atom({
+  key: 'searchInputState',
+  default: '',
+});
+
+export const searchInputSelector = selector({
+  key: 'searchInput',
+  get: ({ get }) => {
+    const value = get(searchInputState);
+    return value;
+  },
 });
