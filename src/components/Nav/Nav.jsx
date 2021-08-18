@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 
 const Nav = () => {
+  const history = useHistory();
+  const [searchInput, setSearchInput] = useState('');
+
+  const InputKeyEnter = e => {
+    e.key === 'Enter' && history.push(`/search?name=${searchInput}`);
+  };
+
   return (
     <NavSection>
       <ContentContainer>
@@ -10,7 +18,12 @@ const Nav = () => {
           <IconSearch>
             <i className="fas fa-search"></i>
           </IconSearch>
-          <InputSearch placeholder="우체통을 검색해주세요." />
+          <InputSearch
+            onChange={e => setSearchInput(e.target.value)}
+            onKeyPress={InputKeyEnter}
+            type="search"
+            placeholder="우체통을 검색해주세요."
+          />
           <CreatePostBtn>우체통 만들기</CreatePostBtn>
         </NavRight>
       </ContentContainer>
