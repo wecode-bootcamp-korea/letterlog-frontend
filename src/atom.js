@@ -1,20 +1,4 @@
-import { atom, selector } from 'recoil';
-
-export const letterBoxState = atom({
-  key: 'letterBoxState',
-  default: [],
-});
-
-export const selectedFilesState = atom({
-  key: 'selectedFilesState',
-  default: null,
-  dangerouslyAllowMutability: true,
-});
-
-export const boxIdState = atom({
-  key: 'boxId',
-  default: '',
-});
+import { atom, selector, useSetRecoilState } from 'recoil';
 
 // 검색 페이지 상태 관리
 export const searchInputState = atom({
@@ -28,4 +12,9 @@ export const searchInputSelector = selector({
     const value = get(searchInputState);
     return value;
   },
+});
+//모달 상태
+export const modalState = atom({
+  key: 'modalState',
+  default: false,
 });
