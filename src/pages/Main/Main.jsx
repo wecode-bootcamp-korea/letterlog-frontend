@@ -13,7 +13,7 @@ const Main = () => {
 
   useEffect(() => {
     axios.get(`${POSTBOXES_API}`).then(({ data }) => {
-      setLetterBoxList(data);
+      setLetterBoxList(data.results);
     });
   }, []);
 

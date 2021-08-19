@@ -1,7 +1,15 @@
 import React from 'react';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
-const Modal = ({ closeModal, header, children }) => {
+const Modal = ({ header, children }) => {
+  const [modalState, setModalState] = useRecoilState(modalState);
+
+  const closeModal = () => {
+    setModalState(false);
+    document.body.style.overflow = 'unset';
+  };
+
   return (
     <>
       <Wrapper>
