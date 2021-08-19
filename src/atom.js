@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom, selector, useSetRecoilState } from 'recoil';
 
 export const letterBoxState = atom({
   key: 'letterBoxState',
@@ -28,4 +28,9 @@ export const searchInputSelector = selector({
     const value = get(searchInputState);
     return value;
   },
+});
+
+export const modalState = atom({
+  key: 'modalState',
+  default: false,
 });
