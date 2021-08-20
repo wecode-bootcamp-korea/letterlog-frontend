@@ -4,7 +4,6 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Modal from '../Modal/Modal';
 import { POSTBOXES_API } from '../../config';
-import { selectedFilesState } from '../../atom';
 import { chkPwd } from '../../Validation/Validation';
 import PostBox from '../../pages/Images/postBox.jpg';
 
@@ -51,14 +50,14 @@ const Card = ({ letterBox }) => {
   };
 
   const fileChangedHandler = e => {
-    // setSelectedFiles(e.target.files[0]);
+    setSelectedFiles(e.target.files[0]);
   };
 
   // 이메일 보내기 // to collection
   const sendMail = () => {
     let token = localStorage.getItem('TOKEN') || '';
     const formData = new FormData();
-    // formData.append('image_url', selectedFiles);
+    formData.append('image_url', selectedFiles);
     formData.append('nickname', formValues.nameInput);
     formData.append('caption', formValues.textInput);
     const config = {
@@ -90,6 +89,8 @@ const Card = ({ letterBox }) => {
       closeModalState();
     } else alert('정해진 양식을 채워주세요.');
   };
+  console.log(`formValues`, formValues);
+  console.log(`selectedFiles`, selectedFiles);
   // `${POSTBOXES_API}/${formValues.boxId}/signin`
   // `${POSTBOXES_API}/access`;
   const checkPw = () => {

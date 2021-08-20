@@ -16,5 +16,5 @@ export const searchInputSelector = selector({
 //모달 상태
 export const modalState = atom({
   key: 'modalState',
-  default: { type: 'closed', status: false }, //d이런식으로 type을 imaeUpload 나 password나
+  default: false,
 });
