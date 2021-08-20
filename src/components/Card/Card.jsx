@@ -4,7 +4,6 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Modal from '../Modal/Modal';
 import { POSTBOXES_API } from '../../config';
-import { selectedFilesState } from '../../atom';
 import { chkPwd } from '../../Validation/Validation';
 import PostBox from '../../pages/Images/postBox.jpg';
 
