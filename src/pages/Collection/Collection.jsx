@@ -12,18 +12,18 @@ const Collection = () => {
 
   const params = useParams();
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${POSTBOXES_COLLECTION_API}?uuid=${params.q}`)
-  //     .then(res => setCollectionData(res.data));
-  // }, []);
-
-  // 목데이터;
   useEffect(() => {
     axios
-      .get('/data/CollectionData.json')
-      .then(res => setCollectionData(res.data.result));
+      .get(`${POSTBOXES_COLLECTION_API}?uuid=${params.q}`)
+      .then(res => setCollectionData(res.data));
   }, []);
+
+  // 목데이터;
+  // useEffect(() => {
+  //   axios
+  //     .get('/data/CollectionData.json')
+  //     .then(res => setCollectionData(res.data.result));
+  // }, []);
 
   return (
     <Container>

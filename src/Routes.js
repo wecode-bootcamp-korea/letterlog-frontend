@@ -15,7 +15,7 @@ class Routes extends React.Component {
         <Switch>
           <Route exact path="/" component={Main} />
           <Route exact path="/search" component={Search} />
-          <Route exact path="/postoxes/collection/:q" component={Collection} />
+          <Route exact path="/postboxes/collection/:q" component={Collection} />
         </Switch>
         <Footer />
       </Router>
