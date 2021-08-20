@@ -1,22 +1,32 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
-import { useHistory } from 'react-router';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { searchInputState } from '../../atom';
+
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { modalState, searchInputState } from '../../atom';
+
+import Modal from '../Modal/Modal';
+import PostCreateForm from './PostModal/PostCreateForm';
 
 const Nav = () => {
   const history = useHistory();
 
-  const setSearchInput = useSetRecoilState(searchInputState);
+  const [isModalOpen, setIsModalOpen] = useRecoilState(modalState);
 
+  const setSearchInput = useSetRecoilState(searchInputState);
   const InputKeyEnter = e => {
     e.key === 'Enter' && history.push('/search');
+  };
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
   };
 
   return (
     <Section>
       <Container>
-        <Logo href="/">LETTER LOG</Logo>
+        <Logo to="/">LETTER LOG</Logo>
         <Menu>
           <IconSearch>
             <i className="fas fa-search"></i>
@@ -27,7 +37,12 @@ const Nav = () => {
             type="search"
             placeholder="우체통을 검색해주세요."
           />
-          <CreatePostBtn>우체통 만들기</CreatePostBtn>
+          {isModalOpen && (
+            <Modal>
+              <PostCreateForm isModalOpen={isModalOpen} />
+            </Modal>
+          )}
+          <CreatePostBtn onClick={handleModalOpen}>우체통 만들기</CreatePostBtn>
         </Menu>
       </Container>
     </Section>
@@ -48,10 +63,10 @@ const Section = styled.div`
 const Container = styled.div`
   ${({ theme }) => theme.setFlex('space-between')}
   height: 111px;
-  padding: 0 8vw;
+  padding: 0 120px;
 `;
 
-const Logo = styled.a`
+const Logo = styled(Link)`
   text-decoration: none;
   font-size: 18px;
   font-weight: 800;

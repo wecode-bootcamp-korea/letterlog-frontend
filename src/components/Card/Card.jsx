@@ -51,14 +51,14 @@ const Card = ({ letterBox }) => {
   };
 
   const fileChangedHandler = e => {
-    setSelectedFiles(e.target.files[0]);
+    // setSelectedFiles(e.target.files[0]);
   };
 
   // 이메일 보내기 // to collection
   const sendMail = () => {
     let token = localStorage.getItem('TOKEN') || '';
     const formData = new FormData();
-    formData.append('image_url', selectedFiles);
+    // formData.append('image_url', selectedFiles);
     formData.append('nickname', formValues.nameInput);
     formData.append('caption', formValues.textInput);
     const config = {
