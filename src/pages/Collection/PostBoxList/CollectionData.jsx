@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CollectionModal = ({ nickName, imageUrl, caption }) => {
+const CollectionData = ({ nickName, imageUrl, caption }) => {
   return (
-    <div>
+    <Container>
       <div>
         <NickNameTitle>
           <h3>닉네임: {nickName}</h3>
@@ -13,11 +13,11 @@ const CollectionModal = ({ nickName, imageUrl, caption }) => {
       <div>
         <Img alt="" src={imageUrl} />
       </div>
-    </div>
+    </Container>
   );
 };
 
-export default CollectionModal;
+export default CollectionData;
 
 const Img = styled.img`
   width: 100%;
@@ -25,4 +25,15 @@ const Img = styled.img`
 
 const NickNameTitle = styled.h3`
   margin-bottom: 10px;
+`;
+
+const Container = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 600px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
 `;
