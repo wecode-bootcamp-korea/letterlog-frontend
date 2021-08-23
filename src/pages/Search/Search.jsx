@@ -5,11 +5,11 @@ import axios from 'axios';
 import { FilterCardBox } from 'pages/Search/FilterCardBox';
 import { POSTBOXES_API } from 'config';
 import { useRecoilState } from 'recoil';
-import { searchInputSelector } from 'atom';
+import { searchInputState } from 'atom';
 
 const Search = () => {
   const [letterBoxList, setLetterBoxList] = useState([]);
-  const [searchInput] = useRecoilState(searchInputSelector);
+  const [searchInput] = useRecoilState(searchInputState);
 
   useEffect(() => {
     axios.get(`${POSTBOXES_API}`).then(({ data }) => {
