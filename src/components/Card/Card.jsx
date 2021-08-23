@@ -1,125 +1,124 @@
-import React, { useState, useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import axios from 'axios';
+import React, { useState, useEffect, Children } from 'react';
+// import { useRecoilState } from 'recoil';
+// import axios from 'axios';
 import styled from 'styled-components';
-import { Modal } from 'components/Modal';
-import { POSTBOXES_API } from 'config';
-import { chkPwd } from 'Validation/Validation';
+// import { Modal } from 'components/Modal';
+// import { POSTBOXES_API } from 'config';
+// import { chkPwd } from 'Validation/Validation';
 import PostBox from 'pages/Images/postBox.jpg';
 
-import { SendingForm, PwForm } from 'components/Card/Form';
-import { modalState } from 'atom';
+// import { SendingForm, PwForm } from 'components/Card/Form';
+// import { modalState, actions } from 'atom';
 
-const Card = ({ letterBox }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [openPw, setOpenPw] = useState(false);
-  const setIsModal = useSetRecoilState(modalState);
+const Card = ({ letterBox, openModal, children }) => {
+  // const [modalOpen, setModalOpen] = useState(false);
+  // const [openPw, setOpenPw] = useState(false);
 
-  const [selectedFiles, setSelectedFiles] = useState(null);
-  const [formValues, setFormValues] = useState({
-    nameInput: '',
-    textInput: '',
-    pwInput: '',
-    boxId: '',
-  });
+  // const [isModal, setIsModal] = useRecoilState(modalState);
+  // const [selectedFiles, setSelectedFiles] = useState(null);
+  // const [formValues, setFormValues] = useState({
+  //   nameInput: '',
+  //   textInput: '',
+  //   pwInput: '',
+  //   boxId: '',
+  // });
 
-  // console.log(`formValues`, formValues);
-  // console.log(`selectedFiles`, selectedFiles);
+  // const openModal = () => {
+  //   setFormValues({ boxId: letterBox.id });
+  //   if (letterBox.is_public === true) {
+  //     setIsModal(actions.OPEN_SEND);
+  //     // setModalOpen(true);
+  //     document.body.style.overflow = 'hidden';
+  //   }
+  //   if (letterBox.is_public === false) {
+  //     setIsModal(actions.OPEN_PW);
+  //     // setOpenPw(true);
+  //     document.body.style.overflow = 'hidden';
+  //   }
+  // };
 
-  //모달 온오프
+  // //메일 전송 완료 시 닫는 함수
+  // const closeModalState = () => {
+  //   setIsModal(actions.CLOSE_SEND);
+  //   setIsModal(actions.CLOSE_PW);
+  //   document.body.style.overflow = 'unset';
+  // };
 
-  const openModal = () => {
-    setFormValues({ boxId: letterBox.id });
-    if (letterBox.is_public === true) {
-      setModalOpen(true);
-      document.body.style.overflow = 'hidden';
-    }
-    if (letterBox.is_public === false) {
-      setOpenPw(true);
-      document.body.style.overflow = 'hidden';
-    }
-  };
+  // //이번트 겟
+  // const handleForm = e => {
+  //   const { name, value } = e.target;
+  //   setFormValues({ ...formValues, [name]: value });
+  // };
 
-  //메일 전송 완료 시 닫는 함수
-  const closeModalState = () => {
-    setModalOpen(false);
-    setOpenPw(false);
-    document.body.style.overflow = 'unset';
-  };
+  // //파일 업로드
+  // const fileChangedHandler = e => {
+  //   setSelectedFiles(e.target.files[0]);
+  // };
 
-  const handleForm = e => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
+  // // 이메일 보내기 // to collection
+  // const sendMail = () => {
+  //   let token = localStorage.getItem('TOKEN') || '';
+  //   const formData = new FormData();
+  //   formData.append('image', selectedFiles);
+  //   formData.append('nickname', formValues.nameInput);
+  //   formData.append('caption', formValues.textInput);
+  //   const config = {
+  //     headers: {
+  //       Authorization: token,
+  //       'content-type': 'multipart/form-data',
+  //     },
+  //   };
+  //   if (
+  //     formValues.nameInput &&
+  //     formValues.textInput &&
+  //     selectedFiles !== null
+  //   ) {
+  //     axios.post(`${POSTBOXES_API}/${formValues.boxId}/send`, formData, config);
+  //     //  .then(res => res.json())
+  //     // .then(res => {
+  //     //   {
+  //     //     localStorage.setItem('message', res.data.message);
+  //     //   }
+  //     // });
+  //     alert('전송완료');
+  //     setSelectedFiles(null);
+  //     localStorage.removeItem('TOKEN');
+  //     setFormValues({ nameInput: '', textInput: '' });
+  //     closeModalState();
+  //   } else alert('정해진 양식을 채워주세요.');
+  // };
+  // //비밀번호 체크
+  //   const checkPw = () => {
+  //     if (chkPwd(formValues.pwInput)) {
+  //       fetch(`${POSTBOXES_API}/access`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'content-type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           id: formValues.boxId,
+  //           password: formValues.pwInput,
+  //         }),
+  //       })
+  //         .then(res => res.json())
+  //         .then(res => {
+  //           if (res.token) {
+  //             localStorage.setItem('TOKEN', res.token);
+  //             // this.props.history.push('/');
+  //             // setModalOpen(true);
+  //             // setOpenPw(false);
+  //             setIsModal(actions.OPEN_SEND);
+  //             setIsModal(actions.CLOSE_PW);
 
-  const fileChangedHandler = e => {
-    setSelectedFiles(e.target.files[0]);
-  };
-
-  // 이메일 보내기 // to collection
-  const sendMail = () => {
-    let token = localStorage.getItem('TOKEN') || '';
-    const formData = new FormData();
-    formData.append('image', selectedFiles);
-    formData.append('nickname', formValues.nameInput);
-    formData.append('caption', formValues.textInput);
-    const config = {
-      headers: {
-        Authorization: token,
-        'content-type': 'multipart/form-data',
-      },
-    };
-    if (
-      formValues.nameInput &&
-      formValues.textInput &&
-      selectedFiles !== null
-    ) {
-      axios.post(`${POSTBOXES_API}/${formValues.boxId}/send`, formData, config);
-      //  .then(res => res.json())
-      // .then(res => {
-      //   {
-      //     localStorage.setItem('message', res.data.message);
-      //   }
-      // });
-      alert('전송완료');
-      setSelectedFiles(null);
-      localStorage.removeItem('TOKEN');
-      setFormValues({ nameInput: '', textInput: '' });
-      closeModalState();
-    } else alert('정해진 양식을 채워주세요.');
-  };
-  // console.log(`formValues`, formValues);
-  // console.log(`selectedFiles`, selectedFiles);
-  // `${POSTBOXES_API}/${formValues.boxId}/signin`
-  // `${POSTBOXES_API}/access`;
-  const checkPw = () => {
-    if (chkPwd(formValues.pwInput)) {
-      fetch(`${POSTBOXES_API}/access`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: formValues.boxId,
-          password: formValues.pwInput,
-        }),
-      })
-        .then(res => res.json())
-        .then(res => {
-          if (res.token) {
-            localStorage.setItem('TOKEN', res.token);
-            // this.props.history.push('/');
-            setModalOpen(true);
-            setOpenPw(false);
-            setFormValues({ ...formValues, pwInput: '' });
-          } else {
-            alert('입력하신 비밀번호를 다시 확인해주세요.');
-          }
-        });
-    } else {
-      alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
-    }
-  };
+  //             setFormValues({ ...formValues, pwInput: '' });
+  //           } else {
+  //             alert('입력하신 비밀번호를 다시 확인해주세요.');
+  //           }
+  //         });
+  //     } else {
+  //       alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
+  //     }
+  //   };
 
   return (
     <>
@@ -133,21 +132,7 @@ const Card = ({ letterBox }) => {
           <Button onClick={openModal}>
             <i className="far fa-paper-plane"></i>
           </Button>
-          {/* 모달창 */}
-          {openPw && (
-            <Modal open={modalOpen} header="비밀번호">
-              <PwForm handleForm={handleForm} checkPw={checkPw} />
-            </Modal>
-          )}
-          {modalOpen && (
-            <Modal open={modalOpen} header="이메일 보내기">
-              <SendingForm
-                handleForm={handleForm}
-                fileChangedHandler={fileChangedHandler}
-                sendMail={sendMail}
-              />
-            </Modal>
-          )}
+          {children}
         </Box>
       )}
     </>
