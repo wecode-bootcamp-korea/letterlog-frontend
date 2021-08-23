@@ -8,7 +8,7 @@ const Modal = ({ header, children }) => {
   const setIsModal = useSetRecoilState(modalState);
 
   const closeModal = () => {
-    setIsModal(false);
+    setIsModal({ status: false });
     document.body.style.overflow = 'unset';
   };
 

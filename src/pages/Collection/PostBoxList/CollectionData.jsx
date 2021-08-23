@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CollectionModal = ({ nickName, imageUrl, caption }) => {
+const CollectionData = ({ nickName, imageUrl, caption }) => {
   return (
     <div>
       <div>
@@ -17,7 +17,7 @@ const CollectionModal = ({ nickName, imageUrl, caption }) => {
   );
 };
 
-export default CollectionModal;
+export default CollectionData;
 
 const Img = styled.img`
   width: 100%;
