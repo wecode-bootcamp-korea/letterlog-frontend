@@ -94,32 +94,37 @@ const PostCreateForm = () => {
         if (item.name === name) return alert('우체통 이름이 중복됩니다.');
       }
 
-      const today = dayjs().format('YYYY-MM-DD');
+      console.log(`chkPwd(password)`, chkPwd(password));
 
-      if (!chkDate(send_at) || send_at < today)
-        return alert('날짜를 확인해주세요.');
+      const limitDay = dayjs().add(7, 'day').format('YYYY-MM-DD');
 
-      if (isPublic === 'false' && !chkPwd(password))
-        return alert('비밀번호를 확인해주세요.');
+      if (!chkDate(send_at)) return alert('날짜 양식을 확인해주세요.');
+
+      if (send_at < limitDay)
+        return alert('날짜는 최소 일주일 뒤로 설정해주세요.');
+
+      if (isPublic === 'false' && !chkPwd(password)) {
+        return alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
+      } else {
+        axios
+          .post(`${POSTBOXES_API}`, {
+            name: formValue.name.replace(/ +/g, ' ').trim(),
+            password: formValue.password,
+            is_public: isPublic,
+            send_at: formValue.send_at,
+            receivers: emailList,
+          })
+          .then(res => {
+            if (res.status === 201) {
+              alert('생성 완료');
+              setIsModalOpen(false);
+              history.push('/');
+              window.location.reload();
+              return;
+            }
+          });
+      }
     });
-
-    axios
-      .post(`${POSTBOXES_API}`, {
-        name: formValue.name.replace(/ +/g, ' ').trim(),
-        password: formValue.password,
-        is_public: isPublic,
-        send_at: formValue.send_at,
-        receivers: emailList,
-      })
-      .then(res => {
-        if (res.status === 201) {
-          alert('생성 완료');
-          setIsModalOpen(false);
-          history.push('/');
-          window.location.reload();
-          return;
-        }
-      });
   };
 
   const InputKeyEnter = e => {
@@ -139,8 +144,8 @@ const PostCreateForm = () => {
           type="text"
           name="name"
           onChange={handleInputData}
-          placeholder="여백은 띄어쓰기만 적용됩니다."
-          maxLength="40"
+          placeholder="20자 이내로 지어주세요."
+          maxLength="20"
           required
         />
       </Container>
@@ -191,7 +196,7 @@ const PostCreateForm = () => {
       </EmailListContainer>
       <Line />
       <Container>
-        <Title>공개 여부</Title>
+        <Title>공개여부</Title>
         <div>
           <label htmlFor="radioPublic">
             <input
@@ -219,14 +224,14 @@ const PostCreateForm = () => {
       </Container>
       {isPublic === 'false' && (
         <Container>
-          <Title>비밀코드</Title>
+          <Title>비밀번호</Title>
           <PasswordInput
             type="password"
             name="password"
             onChange={handleInputData}
             maxLength="15"
             required
-            placeholder="비밀코드는 8자로 설정해주세요."
+            placeholder="비밀번호는 8자 이상으로 설정해주세요."
           />
         </Container>
       )}
