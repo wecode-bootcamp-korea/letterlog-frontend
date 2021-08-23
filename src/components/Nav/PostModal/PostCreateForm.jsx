@@ -2,67 +2,77 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import axios from 'axios';
 import styled from 'styled-components';
-import EmailList from './EmailList';
-import { POSTBOXES_API } from '../../../config';
-import { chkPwd, chkEmail, chkDate } from '../../../Validation/Validation';
-import { useSetRecoilState } from 'recoil';
-import { modalState } from '../../../atom';
 import { useQuery } from 'react-query';
+import { useSetRecoilState } from 'recoil';
+
+import { modalState } from 'atom';
+import { POSTBOXES_API } from 'config';
+import { chkPwd, chkEmail, chkDate } from 'Validation/Validation';
+import dayjs from 'dayjs';
+
+import EmailList from './EmailList';
 
 const PostCreateForm = () => {
   const setIsModalOpen = useSetRecoilState(modalState);
 
   const history = useHistory();
 
-  const [inputData, setInputData] = useState({
+  const [formValue, setFormValue] = useState({
     name: '',
     password: '',
     send_at: '',
   });
+  const { name, password, send_at } = formValue;
 
   const [emailText, setEmailText] = useState('');
   const [emailList, setEmailList] = useState([]);
-  const [isRadioValue, setIsRadioValue] = useState('');
+  const [isPublic, setIsPublic] = useState('');
   const [addBtnDisabled, setAddBtnDisabled] = useState(true);
   const [submitDisabled, setSubmitDisabled] = useState(true);
 
   const handleInputData = e => {
     const { name, value } = e.target;
-    setInputData({ ...inputData, [name]: value });
+    setFormValue({ ...formValue, [name]: value });
   };
 
+  // email 입력란에 텍스트가 입력되었는지 체크
   useEffect(() => {
     emailText === '' ? setAddBtnDisabled(true) : setAddBtnDisabled(false);
   }, [emailText]);
-
-  useEffect(() => {
-    if (
-      inputData.name !== '' &&
-      inputData.password !== '' &&
-      inputData.send_at !== '' &&
-      emailList.length !== 0 &&
-      isRadioValue !== ''
-    ) {
-      setSubmitDisabled(false);
-    } else {
-      setSubmitDisabled(true);
-    }
-  }, [
-    inputData.name,
-    inputData.password,
-    inputData.send_at,
-    emailList,
-    isRadioValue,
-  ]);
 
   const handleEmailText = e => {
     setEmailText(e.target.value);
   };
 
+  // input에 값이 입력 되었는지 체크
+  useEffect(() => {
+    const validator = value => value.length > 0;
+    const formList = [name, send_at, emailList, isPublic];
+
+    const chkForm = formList.every(validator);
+
+    if (!chkForm) return setSubmitDisabled(true);
+
+    if (isPublic === 'true') return setSubmitDisabled(false);
+    if (isPublic === 'false' && password) return setSubmitDisabled(false);
+    else return setSubmitDisabled(true);
+  }, [formValue, isPublic, emailList]);
+
+  // 라디오값 체크
   const handlePublic = radioValue => {
-    radioValue === 'true' ? setIsRadioValue('true') : setIsRadioValue('false');
+    if (radioValue === 'true') {
+      setIsPublic('true');
+      setFormValue({
+        name: name,
+        password: '',
+        send_at: send_at,
+      });
+    } else {
+      setIsPublic('false');
+    }
   };
 
+  // 이메일 입력값 체크
   const handleAddEmail = () => {
     if (!chkEmail(emailText)) {
       alert('메일 양식에 맞춰 작성해주세요.');
@@ -72,63 +82,40 @@ const PostCreateForm = () => {
     }
   };
 
-  const handleSubmit = () => {
+  // 작성 완료 후 제출
+  const handleSubmit = async () => {
+    await axios.get(`${POSTBOXES_API}`).then(res => {
+      for (let item of res.data.results) {
+        if (item.name === name) return alert('우체통 이름이 중복됩니다.');
+      }
+
+      const today = dayjs().format('YYYY-MM-DD');
+
+      if (!chkDate(send_at) || send_at < today)
+        return alert('날짜를 확인해주세요.');
+
+      if (isPublic === 'false' && !chkPwd(password))
+        return alert('비밀번호를 확인해주세요.');
+    });
+
     axios
-      .get(`${POSTBOXES_API}`)
-      .then(res => {
-        // console.log(`res.data.results`, res.data.results);
-        for (let item of res.data.results) {
-          if (inputData.name !== '') {
-            if (item.name === inputData.name) {
-              alert('우체통 이름이 중복됩니다.');
-              break;
-            }
-          }
-
-          if (inputData.send_at !== '') {
-            const today = new Date();
-            const dateSplit = inputData.send_at.split('-');
-            const sendAt = new Date(
-              dateSplit[0],
-              dateSplit[1] - 1,
-              dateSplit[2]
-            );
-
-            if (!chkDate(inputData.send_at) || sendAt < today) {
-              alert('날짜를 확인해주세요.');
-              return;
-            }
-          }
-
-          if (emailList.length === 0) {
-            alert('이메일을 입력해주세요.');
-          }
-
-          if (inputData.password !== '') {
-            if (!chkPwd(inputData.password)) {
-              alert('비밀코드를 확인해주세요.');
-              return;
-            }
-          }
-        }
+      .post(`${POSTBOXES_API}`, {
+        name: formValue.name.replace(/ +/g, ' ').trim(),
+        password: formValue.password,
+        is_public: isPublic,
+        send_at: formValue.send_at,
+        receivers: emailList,
       })
-      .then(
-        axios
-          .post(`${POSTBOXES_API}`, {
-            name: inputData.name,
-            password: inputData.password,
-            is_public: isRadioValue,
-            send_at: inputData.send_at,
-            receivers: emailList,
-          })
-          .then(res => {
-            if (res.status === 201) {
-              alert('생성 완료');
-              setIsModalOpen(false);
-              history.push('/');
-            }
-          })
-      );
+      .then(res => {
+        if (res.status === 201) {
+          alert('생성 완료');
+          setIsModalOpen(false);
+          history.push('/');
+          window.location.reload();
+
+          return;
+        }
+      });
   };
 
   const InputKeyEnter = e => {
@@ -148,6 +135,7 @@ const PostCreateForm = () => {
           type="text"
           name="name"
           onChange={handleInputData}
+          placeholder="여백은 띄어쓰기만 적용됩니다."
           maxLength="40"
           required
         />
@@ -185,12 +173,18 @@ const PostCreateForm = () => {
           추가
         </EmailAddBtn>
       </Container>
-      {emailList &&
-        emailList.map((email, id) => {
-          return (
-            <EmailList email={email.email} id={id} removeEmail={removeEmail} />
-          );
-        })}
+      <EmailListContainer>
+        {emailList &&
+          emailList.map((email, id) => {
+            return (
+              <EmailList
+                email={email.email}
+                id={id}
+                removeEmail={removeEmail}
+              />
+            );
+          })}
+      </EmailListContainer>
       <Line />
       <Container>
         <Title>공개 여부</Title>
@@ -201,7 +195,7 @@ const PostCreateForm = () => {
               type="radio"
               name="isPublicRadio"
               value="true"
-              checked={isRadioValue === 'true'}
+              checked={isPublic === 'true'}
               onChange={() => handlePublic('true')}
             />
             공개
@@ -212,24 +206,26 @@ const PostCreateForm = () => {
               type="radio"
               name="isPublicRadio"
               value="false"
-              checked={isRadioValue === 'false'}
+              checked={isPublic === 'false'}
               onChange={() => handlePublic('false')}
             />
             비공개
           </label>
         </div>
       </Container>
-      <Container>
-        <Title>비밀코드</Title>
-        <PasswordInput
-          type="password"
-          name="password"
-          onChange={handleInputData}
-          maxLength="8"
-          required
-          placeholder="비밀코드는 8자로 설정해주세요."
-        />
-      </Container>
+      {isPublic === 'false' && (
+        <Container>
+          <Title>비밀코드</Title>
+          <PasswordInput
+            type="password"
+            name="password"
+            onChange={handleInputData}
+            maxLength="15"
+            required
+            placeholder="비밀코드는 8자로 설정해주세요."
+          />
+        </Container>
+      )}
       <SubmitBtn onClick={handleSubmit} disabled={submitDisabled}>
         생성하기
       </SubmitBtn>
@@ -240,7 +236,7 @@ const PostCreateForm = () => {
 export default PostCreateForm;
 
 const Container = styled.div`
-  margin: 0 0 20px 0;
+  margin: 0 0 12px 0;
   text-align: right;
 
   div {
@@ -313,7 +309,6 @@ const AlarmText = styled.p`
 const SubmitBtn = styled.button`
   width: 100%;
   height: 50px;
-  margin-top: 16px;
   font-size: 16px;
   line-height: 2;
   border-style: none;
@@ -340,7 +335,17 @@ const PasswordInput = styled.input`
 
 const Line = styled.hr`
   width: 400px;
-  margin: 30px 0 30px;
+  margin: 15px 0 15px;
   border-style: none;
   border-bottom: 1px solid #e9e9e9;
+`;
+
+const EmailListContainer = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  width: 100%;
+  height: 80px;
+  text-align: right;
 `;

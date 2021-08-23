@@ -8,7 +8,7 @@ const Modal = ({ header, children }) => {
   const setIsModal = useSetRecoilState(modalState);
 
   const closeModal = () => {
-    setIsModal(false);
+    setIsModal({ status: false });
     document.body.style.overflow = 'unset';
   };
 
@@ -69,6 +69,7 @@ const Section = styled.div`
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 450px;
+  max-height: 95vh;
   margin: 0 auto;
   border-radius: 0.3rem;
   background-color: #fff;
