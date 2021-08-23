@@ -2,38 +2,34 @@ import React from 'react';
 import styled from 'styled-components';
 
 const CarouselData = ({ carouselData }) => {
-  // console.log(`CarouselData`, carouselData);
   return (
-    <Wrap>
+    <Wrapper>
       <Poster>
         <Img src={carouselData.img}></Img>
       </Poster>
-      <Article>
-        <Title>{carouselData.text}</Title>
-      </Article>
-    </Wrap>
+      <Text>
+        <div>{carouselData.title}</div>
+        <div>{carouselData.text}</div>
+      </Text>
+    </Wrapper>
   );
 };
 
 export default CarouselData;
 
+const Wrapper = styled.div`
+  ${props => props.theme.setFlex('center', 'center')};
+`;
+
 const Poster = styled.div`
   width: 50%;
-  height: 389px;
 `;
-
-//데이터 들어오면 스타일용
-const Article = styled.div``;
-
-const Wrap = styled.div`
-  width: 90%;
-  height: 389px;
-  /* overflow: hidden; */
-`;
-
-//데이터 들어오면 스타일용
-const Title = styled.div``;
 
 const Img = styled.img`
+  height: 389px;
   object-fit: cover;
+`;
+
+const Text = styled.div`
+  width: 50%;
 `;

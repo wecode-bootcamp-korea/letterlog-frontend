@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const PwModal = ({ handleForm, checkPw }) => {
+const PwForm = ({ handleForm, checkPw }) => {
   const enterSubmit = e => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       checkPw();
     }
   };
@@ -24,7 +24,7 @@ const PwModal = ({ handleForm, checkPw }) => {
   );
 };
 
-export default PwModal;
+export default PwForm;
 
 const Footer = styled.div`
   padding: 12px 16px;

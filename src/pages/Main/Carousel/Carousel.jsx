@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import CarouselData from './CarouselData/CarouselData';
 
 import Slider from 'react-slick';
-// import 'slick-carousel/slick/slick.css';
-// import 'slick-carousel/slick/slick-theme.css';
 
 const Carousel = () => {
   const [carouselData, setCarouselDate] = useState([]);
@@ -13,10 +11,8 @@ const Carousel = () => {
   useEffect(() => {
     axios.get('data/Carousel.json').then(({ data }) => {
       setCarouselDate(data.results.carousel);
-      // setLetterBoxList(data.results.postboxes);
     });
   }, []);
-  // console.log(`carouselData`, carouselData);
   const settings = {
     dots: true,
     infinite: true,
@@ -44,11 +40,12 @@ const Container = styled.div`
   ${props => props.theme.setFlex('center', 'center')};
   width: 90%;
   height: 389px;
-  background-color: ${props => props.theme.mainColor};
+  background-color: ${props => props.theme.cardBackground};
+  border: 1px solid ${props => props.theme.cardBackground};
+  border-radius: 10px;
 `;
 
 const Wrap = styled.div`
-  margin: 5% auto;
   width: 100%;
   .slick-prev:before {
     opaicty: 1; // 기존에 숨어있던 화살표 버튼이 보이게
