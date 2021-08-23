@@ -2,7 +2,7 @@ import React from 'react';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 
-import { modalState } from '../../atom';
+import { modalState } from 'atom';
 
 const Modal = ({ header, children }) => {
   const setIsModal = useSetRecoilState(modalState);

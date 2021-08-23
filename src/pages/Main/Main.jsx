@@ -2,11 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import styled from 'styled-components/macro';
 //macro 디버깅이 더 수월해진다
-import Carousel from './Carousel/Carousel';
-import { POSTBOXES_API } from '../../config';
+import { Carousel } from 'pages/Main/Carousel';
+import { POSTBOXES_API } from 'config';
 
 import { useInView } from 'react-intersection-observer';
-import Card from '../../components/Card/Card';
+import { Card } from 'components/Card';
 
 const Main = () => {
   const [sortList, setSortList] = useState('');
@@ -41,24 +41,6 @@ const Main = () => {
       setPage(prevState => prevState + 1);
     }
   }, [inView, loading]);
-
-  // const sortClicked = e => {
-  //   if (e.target.innerText === '전체') {
-  //     setLetterBoxList([]);
-  //     setPage(1);
-  //     setSortList('');
-  //   }
-  //   if (e.target.innerText === '공개') {
-  //     setPage(1);
-  //     setLetterBoxList([]);
-  //     setSortList('public');
-  //   }
-  //   if (e.target.innerText === '비공개') {
-  //     setPage(1);
-  //     setLetterBoxList([]);
-  //     setSortList('private');
-  //   }
-  // };
 
   const sortClicked = e => {
     const filterType = e.target.innerText;
@@ -106,6 +88,8 @@ const Main = () => {
   );
 };
 
+export default Main;
+
 const Container = styled.div`
   ${props => props.theme.setFlex('center', 'center')};
   flex-direction: column;
@@ -113,8 +97,6 @@ const Container = styled.div`
   width: 100vw;
   height: 100%;
 `;
-
-export default Main;
 
 const Wrapper = styled.div`
   ${props => props.theme.setFlex('flex-end', 'center')};
