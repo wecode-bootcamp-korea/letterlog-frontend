@@ -3,20 +3,58 @@ import { useParams } from 'react-router';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import { POSTBOXES_COLLECTION_API } from '../../config';
+import { Modal } from 'components/Modal';
+import PwMForm from 'components/Card/Form/PwForm';
+import { chkPwd } from 'Validation/Validation';
 
-import PostBoxList from './PostBoxList/PostBoxList';
+import {
+  COLLECTION_UUID,
+  POSTBOXES_API,
+  POSTBOXES_COLLECTION_API,
+} from 'config';
+
+import { PostBoxList } from 'pages/Collection/PostBoxList';
+import { modalState } from 'atom';
 
 const Collection = () => {
   const [collectionData, setCollectionData] = useState([]);
+  const [isModal, setIsModal] = useState(modalState);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [chkPublic, setChkPublic] = useState({ id: '', isPublic: false });
 
   const params = useParams();
 
   useEffect(() => {
     axios
-      .get(`${POSTBOXES_COLLECTION_API}?uuid=${params.q}`)
-      .then(res => setCollectionData(res.data));
+      .post(`${COLLECTION_UUID}`, {
+        uuid: params.q,
+      })
+      .then(res => {
+        console.log(`res`, res);
+        // res.is_public === false &&
+        //   setIsModal({ type: 'collectionPw', status: true });
+        // setChkPublic({ id: res.id, isPublic: res.is_public });
+      });
   }, []);
+
+  console.log(`params.q`, params.q);
+
+  const handleForm = e => {
+    setPasswordInput(e.target.value);
+  };
+
+  const checkPw = () => {
+    if (chkPwd(passwordInput)) {
+      axios
+        .post(`${POSTBOXES_API}`, {
+          id: chkPublic.id,
+          password: passwordInput,
+        })
+        .then(res => setCollectionData(res.data));
+    } else {
+      alert('입력하신 비밀번호를 다시 확인해주세요.');
+    }
+  };
 
   // 목데이터;
   // useEffect(() => {
@@ -34,6 +72,11 @@ const Collection = () => {
           caption={data.caption}
         />
       ))}
+      {isModal.type === 'collectionPw' && (
+        <Modal header="비밀번호">
+          <PwMForm handleForm={handleForm} checkPw={checkPw} />
+        </Modal>
+      )}
     </Container>
   );
 };

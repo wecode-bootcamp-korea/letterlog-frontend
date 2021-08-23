@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import Modal from '../../../components/Modal/Modal';
-import CollectionData from './CollectionData/CollectionData';
+import { Modal } from 'components/Modal';
+import CollectionData from 'pages/Collection/PostBoxList/CollectionData';
 
 import { useRecoilState } from 'recoil';
-import { modalState } from '../../../atom';
+import { modalState } from 'atom';
 
 const PostBoxList = ({ nickName, imageUrl, caption }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Main from './pages/Main/Main';
-import Search from './pages/Search/Search';
-import Collection from './pages/Collection/Collection';
-import Nav from './components/Nav/Nav';
-import Footer from './components/Footer/Footer';
+import Main from 'pages/Main/Main';
+import Search from 'pages/Search/Search';
+import Collection from 'pages/Collection/Collection';
+import Nav from 'components/Nav/Nav';
+import Footer from 'components/Footer/Footer';
 
 class Routes extends React.Component {
   render() {
@@ -15,7 +15,7 @@ class Routes extends React.Component {
         <Switch>
           <Route exact path="/" component={Main} />
           <Route exact path="/search" component={Search} />
-          <Route exact path="/postboxes/collection/:q" component={Collection} />
+          <Route exact path="/collections/:q" component={Collection} />
         </Switch>
         <Footer />
       </Router>

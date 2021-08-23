@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom';
-import Routes from './Routes';
-import GlobalStyle from './styles/GlobalStyle';
+import Routes from 'Routes';
+import GlobalStyle from 'styles/GlobalStyle';
 import { ThemeProvider } from 'styled-components';
-import theme from './styles/theme';
+import theme from 'styles/theme';
 import { RecoilRoot } from 'recoil';
 import { QueryClientProvider, QueryClient } from 'react-query';
 
