@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import FilterCardBox from './FilterCardBox/FilterCardBox';
-import { POSTBOXES_API } from '../../config';
+import { FilterCardBox } from 'pages/Search/FilterCardBox';
+import { POSTBOXES_API } from 'config';
 import { useRecoilState } from 'recoil';
-import { searchInputSelector } from '../../atom';
+import { searchInputSelector } from 'atom';
 
 const Search = () => {
   const [letterBoxList, setLetterBoxList] = useState([]);

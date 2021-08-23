@@ -16,5 +16,5 @@ export const searchInputSelector = selector({
 //모달 상태
 export const modalState = atom({
   key: 'modalState',
-  default: false,
+  default: { type: 'closed', status: false },
 });

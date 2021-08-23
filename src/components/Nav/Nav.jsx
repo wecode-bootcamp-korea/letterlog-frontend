@@ -3,15 +3,15 @@ import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { modalState, searchInputState } from '../../atom';
+import { modalState, searchInputState } from 'atom';
 
-import Modal from '../Modal/Modal';
-import PostCreateForm from './PostModal/PostCreateForm';
+import { Modal } from 'components/Modal';
+import PostCreateForm from 'components/Nav/PostModal/PostCreateForm';
 
 const Nav = () => {
   const history = useHistory();
 
-  const [isModalOpen, setIsModalOpen] = useRecoilState(modalState);
+  const [isModal, setIsModal] = useRecoilState(modalState);
 
   const setSearchInput = useSetRecoilState(searchInputState);
   const InputKeyEnter = e => {
@@ -19,7 +19,7 @@ const Nav = () => {
   };
 
   const handleModalOpen = () => {
-    setIsModalOpen(true);
+    setIsModal({ type: 'create', status: true });
     document.body.style.overflow = 'hidden';
   };
 
@@ -37,9 +37,9 @@ const Nav = () => {
             type="search"
             placeholder="우체통을 검색해주세요."
           />
-          {isModalOpen && (
-            <Modal>
-              <PostCreateForm isModalOpen={isModalOpen} />
+          {isModal.type === 'create' && (
+            <Modal header="우체통 만들기">
+              <PostCreateForm isModal={isModal} />
             </Modal>
           )}
           <CreatePostBtn onClick={handleModalOpen}>우체통 만들기</CreatePostBtn>
