@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import styled from 'styled-components';
-import Modal from '../Modal/Modal';
-import { POSTBOXES_API } from '../../config';
-import { chkPwd } from '../../Validation/Validation';
-import PostBox from '../../pages/Images/postBox.jpg';
+import { Modal } from 'components/Modal';
+import { POSTBOXES_API } from 'config';
+import { chkPwd } from 'Validation/Validation';
+import PostBox from 'pages/Images/postBox.jpg';
 
-import PwModal from '../Modal/components/PwModal';
-import MainModal from '../Modal/components/MainModal';
-import { modalState } from '../../atom';
+import PwFoam from 'components/Card/Foam/PwFoam';
+import SendingFoam from 'components/Card/Foam/SendingFoam';
+import { modalState } from 'atom';
 
 const Card = ({ letterBox }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -137,12 +137,12 @@ const Card = ({ letterBox }) => {
           {/* 모달창 */}
           {openPw && (
             <Modal open={modalOpen} header="비밀번호">
-              <PwModal handleForm={handleForm} checkPw={checkPw} />
+              <PwFoam handleForm={handleForm} checkPw={checkPw} />
             </Modal>
           )}
           {modalOpen && (
             <Modal open={modalOpen} header="이메일 보내기">
-              <MainModal
+              <SendingFoam
                 handleForm={handleForm}
                 fileChangedHandler={fileChangedHandler}
                 sendMail={sendMail}

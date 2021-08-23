@@ -21,6 +21,8 @@ const Poster = styled.div`
   width: 50%;
   height: 389px;
 `;
+
+//데이터 들어오면 스타일용
 const Article = styled.div``;
 
 const Wrap = styled.div`
@@ -28,7 +30,10 @@ const Wrap = styled.div`
   height: 389px;
   /* overflow: hidden; */
 `;
+
+//데이터 들어오면 스타일용
 const Title = styled.div``;
+
 const Img = styled.img`
   object-fit: cover;
 `;
