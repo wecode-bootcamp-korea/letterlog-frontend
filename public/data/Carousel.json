@@ -4,20 +4,20 @@
       {
         "id": 1,
         "text": "Send me a letter.",
-        "img": "https://sufio.com/content/media/images/letterbox-packaging-featured_12Qfu6t.width-1440.jpg",
-        "title": "2021-12-27"
+        "img": "https://cdn.pixabay.com/photo/2016/09/01/19/53/pocket-watch-1637396_1280.jpg",
+        "title": "이달의 우체통"
       },
       {
         "id": 2,
-        "text": "이달의 우체통",
+        "text": "초대합니다.",
         "img": "https://m.young.hyundai.com:444/upload/CMS_NEWS_IMAGE/2017/02/02/CMS_NEWS_IMAGE_mGQJP1fkYYIQNJbOHhPT.jpg",
-        "title": "2021-12-27"
+        "title": "이벤트"
       },
       {
         "id": 3,
-        "text": "MADE BY Letter.log",
+        "text": "누가 만들었을까?",
         "img": "https://www.newsro.kr/wp-content/uploads/2019/05/190503A%EB%8A%90%EB%A6%B0%EC%9A%B0%EC%B2%B4%ED%86%B50003.jpg",
-        "title": "2021-12-27"
+        "title": "멤버 소개"
       }
     ]
   }
