@@ -29,7 +29,7 @@ const Main = () => {
         setLoading(false);
       });
   }, [page, sortList, trigger]);
-  console.log(`sortList`, sortList);
+  // console.log(`sortList`, sortList);
   // `getItems` 가 바뀔 때 마다 함수 실행
   useEffect(() => {
     getItems();

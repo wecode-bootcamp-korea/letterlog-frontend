@@ -76,7 +76,7 @@ const PostCreateForm = () => {
     axios
       .get(`${POSTBOXES_API}`)
       .then(res => {
-        console.log(`res.data.results`, res.data.results);
+        // console.log(`res.data.results`, res.data.results);
         for (let item of res.data.results) {
           if (inputData.name !== '') {
             if (item.name === inputData.name) {

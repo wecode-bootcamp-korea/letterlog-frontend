@@ -7,8 +7,7 @@ import { POSTBOXES_API } from 'config';
 import { chkPwd } from 'Validation/Validation';
 import PostBox from 'pages/Images/postBox.jpg';
 
-import PwFoam from 'components/Card/Foam/PwFoam';
-import SendingFoam from 'components/Card/Foam/SendingFoam';
+import { SendingForm, PwForm } from 'components/Card/Form';
 import { modalState } from 'atom';
 
 const Card = ({ letterBox }) => {
@@ -89,8 +88,8 @@ const Card = ({ letterBox }) => {
       closeModalState();
     } else alert('정해진 양식을 채워주세요.');
   };
-  console.log(`formValues`, formValues);
-  console.log(`selectedFiles`, selectedFiles);
+  // console.log(`formValues`, formValues);
+  // console.log(`selectedFiles`, selectedFiles);
   // `${POSTBOXES_API}/${formValues.boxId}/signin`
   // `${POSTBOXES_API}/access`;
   const checkPw = () => {
@@ -137,12 +136,12 @@ const Card = ({ letterBox }) => {
           {/* 모달창 */}
           {openPw && (
             <Modal open={modalOpen} header="비밀번호">
-              <PwFoam handleForm={handleForm} checkPw={checkPw} />
+              <PwForm handleForm={handleForm} checkPw={checkPw} />
             </Modal>
           )}
           {modalOpen && (
             <Modal open={modalOpen} header="이메일 보내기">
-              <SendingFoam
+              <SendingForm
                 handleForm={handleForm}
                 fileChangedHandler={fileChangedHandler}
                 sendMail={sendMail}
