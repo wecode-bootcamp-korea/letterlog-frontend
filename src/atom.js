@@ -6,13 +6,6 @@ export const searchInputState = atom({
   default: '',
 });
 
-export const searchInputSelector = selector({
-  key: 'searchInput',
-  get: ({ get }) => {
-    const value = get(searchInputState);
-    return value;
-  },
-});
 //모달 상태
 export const modalState = atom({
   key: 'modalState',
