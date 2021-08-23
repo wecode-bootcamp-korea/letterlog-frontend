@@ -23,7 +23,11 @@ const Card = ({ letterBox }) => {
     boxId: '',
   });
 
+  // console.log(`formValues`, formValues);
+  // console.log(`selectedFiles`, selectedFiles);
+
   //모달 온오프
+
   const openModal = () => {
     setFormValues({ boxId: letterBox.id });
     if (letterBox.is_public === true) {
@@ -56,7 +60,7 @@ const Card = ({ letterBox }) => {
   const sendMail = () => {
     let token = localStorage.getItem('TOKEN') || '';
     const formData = new FormData();
-    formData.append('image_url', selectedFiles);
+    formData.append('image', selectedFiles);
     formData.append('nickname', formValues.nameInput);
     formData.append('caption', formValues.textInput);
     const config = {
@@ -70,11 +74,7 @@ const Card = ({ letterBox }) => {
       formValues.textInput &&
       selectedFiles !== null
     ) {
-      axios.post(
-        `${POSTBOXES_API}/${formValues.boxId}/sending`,
-        formData,
-        config
-      );
+      axios.post(`${POSTBOXES_API}/${formValues.boxId}/send`, formData, config);
       //  .then(res => res.json())
       // .then(res => {
       //   {
@@ -106,8 +106,8 @@ const Card = ({ letterBox }) => {
       })
         .then(res => res.json())
         .then(res => {
-          if (res.accessToken) {
-            localStorage.setItem('TOKEN', res.accessToken);
+          if (res.token) {
+            localStorage.setItem('TOKEN', res.token);
             // this.props.history.push('/');
             setModalOpen(true);
             setOpenPw(false);
