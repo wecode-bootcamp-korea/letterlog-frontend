@@ -2,6 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const MainModal = ({ handleForm, fileChangedHandler, sendMail }) => {
+  const enterSubmit = e => {
+    if (e.keyCode == 13) {
+      sendMail();
+    }
+  };
   return (
     <div>
       <div>닉네임</div>
@@ -9,7 +14,12 @@ const MainModal = ({ handleForm, fileChangedHandler, sendMail }) => {
       <div>이미지 업로드</div>
       <input type="file" name="selectedFiles" onChange={fileChangedHandler} />
       <div>텍스트(50자 이내)</div>
-      <input type="text" name="textInput" onChange={handleForm} />
+      <input
+        onKeyUp={enterSubmit}
+        type="text"
+        name="textInput"
+        onChange={handleForm}
+      />
       <Footer>
         <Close onClick={sendMail}>보내기</Close>
       </Footer>

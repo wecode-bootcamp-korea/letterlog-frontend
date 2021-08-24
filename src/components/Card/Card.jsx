@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import React, { useState } from 'react';
+// Library
 import axios from 'axios';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
+// Components
 import { Modal } from 'components/Modal';
 import { POSTBOXES_API } from 'config';
 import { chkPwd } from 'Validation/Validation';
 import PostBox from 'pages/Images/postBox.jpg';
-
 import { SendingForm, PwForm } from 'components/Card/Form';
-import { modalState } from 'atom';
 
 const Card = ({ letterBox }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [openPw, setOpenPw] = useState(false);
-  const setIsModal = useSetRecoilState(modalState);
 
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [formValues, setFormValues] = useState({
@@ -23,11 +21,7 @@ const Card = ({ letterBox }) => {
     boxId: '',
   });
 
-  // console.log(`formValues`, formValues);
-  // console.log(`selectedFiles`, selectedFiles);
-
   //모달 온오프
-
   const openModal = () => {
     setFormValues({ boxId: letterBox.id });
     if (letterBox.is_public === true) {
@@ -41,7 +35,7 @@ const Card = ({ letterBox }) => {
   };
 
   //메일 전송 완료 시 닫는 함수
-  const closeModalState = () => {
+  const closeModal = () => {
     setModalOpen(false);
     setOpenPw(false);
     document.body.style.overflow = 'unset';
@@ -74,41 +68,32 @@ const Card = ({ letterBox }) => {
       formValues.textInput &&
       selectedFiles !== null
     ) {
-      axios.post(`${POSTBOXES_API}/${formValues.boxId}/send`, formData, config);
-      //  .then(res => res.json())
-      // .then(res => {
-      //   {
-      //     localStorage.setItem('message', res.data.message);
-      //   }
-      // });
-      alert('전송완료');
-      setSelectedFiles(null);
-      localStorage.removeItem('TOKEN');
-      setFormValues({ nameInput: '', textInput: '' });
-      closeModalState();
+      axios
+        .post(`${POSTBOXES_API}/${formValues.boxId}/send`, formData, config)
+        .then(res => {
+          if (res.statusText === 'Created') {
+            alert('전송완료');
+            setSelectedFiles(null);
+            localStorage.removeItem('TOKEN');
+            setFormValues({ nameInput: '', textInput: '' });
+            closeModal();
+          } else {
+            alert('이미지 파일의 형태만 보낼 수 있습니다.');
+          }
+        });
     } else alert('정해진 양식을 채워주세요.');
   };
-  // console.log(`formValues`, formValues);
-  // console.log(`selectedFiles`, selectedFiles);
-  // `${POSTBOXES_API}/${formValues.boxId}/signin`
-  // `${POSTBOXES_API}/access`;
+
   const checkPw = () => {
     if (chkPwd(formValues.pwInput)) {
-      fetch(`${POSTBOXES_API}/access`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
+      axios
+        .post(`${POSTBOXES_API}/access`, {
           id: formValues.boxId,
           password: formValues.pwInput,
-        }),
-      })
-        .then(res => res.json())
+        })
         .then(res => {
-          if (res.token) {
-            localStorage.setItem('TOKEN', res.token);
-            // this.props.history.push('/');
+          if (res.data.token) {
+            localStorage.setItem('TOKEN', res.data.token);
             setModalOpen(true);
             setOpenPw(false);
             setFormValues({ ...formValues, pwInput: '' });
@@ -135,12 +120,16 @@ const Card = ({ letterBox }) => {
           </Button>
           {/* 모달창 */}
           {openPw && (
-            <Modal open={modalOpen} header="비밀번호">
+            <Modal open={modalOpen} header="비밀번호" closeModal={closeModal}>
               <PwForm handleForm={handleForm} checkPw={checkPw} />
             </Modal>
           )}
           {modalOpen && (
-            <Modal open={modalOpen} header="이메일 보내기">
+            <Modal
+              open={modalOpen}
+              header="이메일 보내기"
+              closeModal={closeModal}
+            >
               <SendingForm
                 handleForm={handleForm}
                 fileChangedHandler={fileChangedHandler}

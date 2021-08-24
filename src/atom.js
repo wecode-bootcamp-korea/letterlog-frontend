@@ -18,3 +18,10 @@ export const modalState = atom({
   key: 'modalState',
   default: { type: 'closed', status: false },
 });
+
+export const actions = {
+  OPEN_PW: { type: 'checkPw', status: true },
+  CLOSE_PW: { type: 'checkPw', status: false },
+  OPEN_SEND: { type: 'sendMail', status: true },
+  CLOSE_SEND: { type: 'sendMail', status: false },
+};

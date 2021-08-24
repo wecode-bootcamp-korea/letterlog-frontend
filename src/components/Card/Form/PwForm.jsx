@@ -7,7 +7,6 @@ const PwModal = ({ handleForm, checkPw }) => {
       checkPw();
     }
   };
-
   return (
     <>
       <div>비밀번호를 입력하세요(숫자와 영문자 조합 8~15자리.)</div>

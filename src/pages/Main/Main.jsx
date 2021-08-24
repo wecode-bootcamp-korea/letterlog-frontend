@@ -1,24 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
+// Library
 import axios from 'axios';
 import styled from 'styled-components/macro';
-//macro 디버깅이 더 수월해진다
+import { useInView } from 'react-intersection-observer';
+//Components
 import { Carousel } from 'pages/Main/Carousel';
 import { POSTBOXES_API } from 'config';
-
-import { useInView } from 'react-intersection-observer';
 import { Card } from 'components/Card';
 
 const Main = () => {
+  //filter
   const [sortList, setSortList] = useState('');
-
+  //pagination
   const [trigger, setTrigger] = useState();
-
-  // const [items, setItems] = useState([]);
-  const [letterBoxList, setLetterBoxList] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-
   const [ref, inView] = useInView();
+  //letterBoxList
+  const [letterBoxList, setLetterBoxList] = useState([]);
 
   const getItems = useCallback(async () => {
     setLoading(true);
@@ -29,7 +28,7 @@ const Main = () => {
         setLoading(false);
       });
   }, [page, sortList, trigger]);
-  // console.log(`sortList`, sortList);
+
   // `getItems` 가 바뀔 때 마다 함수 실행
   useEffect(() => {
     getItems();
@@ -60,18 +59,15 @@ const Main = () => {
     setFilterType(filterTypeToEng[filterType]);
   };
 
-  // '' public private
   return (
     <Container>
       <Carousel />
-      {/* <CardBox letterBoxList={letterBoxList} sortClicked={sortClicked} /> */}
       <Wrapper>
         <Sort onClick={sortClicked}>전체</Sort>
         <Sort onClick={sortClicked}>공개</Sort>
         <Sort onClick={sortClicked}>비공개</Sort>
       </Wrapper>
       <Grid>
-        {/* <div>{inView ? `true` : `false`}</div> */}
         {letterBoxList.map((letterBox, idx) => (
           <React.Fragment key={idx}>
             {letterBoxList.length - 1 === idx ? (
