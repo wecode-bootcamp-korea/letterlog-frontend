@@ -1,6 +1,11 @@
 export function chkPwd(pw) {
-  let reg_pwd = /^[a-zA-Z0-9]{8,15}$/;
-  return !reg_pwd.test(pw) ? false : true;
+  let reg_pwd1 = /^[a-zA-Z0-9]{8,15}$/;
+  let reg_pwd2 = /[a-z]/g;
+  let reg_pwd3 = /[0-9]/g;
+
+  if (!reg_pwd1.test(pw)) return false;
+
+  if (reg_pwd2.test(pw) && reg_pwd3.test(pw)) return true;
 }
 
 export function chkDate(date) {

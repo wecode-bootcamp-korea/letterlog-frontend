@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { useRecoilState } from 'recoil';
 
-import { useQuery } from 'react-query';
+// import { useQuery } from 'react-query';
 import axios from 'axios';
 
 import { Modal } from 'components/Modal';
@@ -18,6 +18,9 @@ import { PostBoxList } from 'pages/Collection/PostBoxList';
 import { modalState } from 'atom';
 
 const Collection = props => {
+  // const { isLoading, data, error } = useQuery();
+  const params = useParams();
+
   const [collectionList, setCollectionList] = useState([]);
   const [collectionData, setCollectionData] = useState();
   const [passwordInput, setPasswordInput] = useState('');
@@ -25,7 +28,9 @@ const Collection = props => {
 
   const [isModal, setIsModal] = useRecoilState(modalState);
 
-  const params = useParams();
+  useEffect(() => {
+    props.handleNavHidden(false);
+  });
 
   // Nav 컴포넌트 숨기기
   useEffect(() => {
@@ -38,11 +43,29 @@ const Collection = props => {
         uuid: params.q,
       })
       .then(res => {
+        // 우체통이 비공개일 때, 비밀번호 모달 실행
         if (res.data.is_public === false) {
           setIsModal({ type: 'collectionPw', status: true });
           setChkPublic({ id: res.data.id, isPublic: res.data.is_public });
+          return;
         }
-        return;
+
+        // 우체통이 공개일 때,바로 데이터 받아오기
+        if (res.data.is_public) {
+          setChkPublic({ id: res.data.id });
+
+          axios
+            .post(`${POSTBOXES_API}/access`, {
+              id: chkPublic.id,
+            })
+            .then(
+              axios
+                .get(`${POSTBOXES_COLLECTION_API}?uuid=${params.q}`)
+                .then(res => {
+                  res.status === 200 && setCollectionList(res.data.results);
+                })
+            );
+        }
       });
   }, []);
 
@@ -77,9 +100,13 @@ const Collection = props => {
           if (res.status === 200) {
             setIsModal({ type: 'collectionPw', status: false });
             setCollectionList(res.data.results);
+            tokenUtils.removeToken();
           }
         });
     }
+
+    if (passwordInput.length < 8)
+      return alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
   };
 
   const handleOpenModal = data => {

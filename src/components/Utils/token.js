@@ -8,9 +8,6 @@ const getToken = () => {
         Authorization: token,
       },
     };
-  } else {
-    alert('비밀번호를 입력하세요.');
-    return null;
   }
 };
 
@@ -18,7 +15,12 @@ const setToken = token => {
   localStorage.setItem(TOKEN_KEY, token);
 };
 
+const removeToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+};
+
 export const tokenUtils = {
   getToken,
   setToken,
+  removeToken,
 };
