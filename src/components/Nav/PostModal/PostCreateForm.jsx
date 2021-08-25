@@ -8,6 +8,7 @@ import { useSetRecoilState } from 'recoil';
 import { modalState } from 'atom';
 import { POSTBOXES_API } from 'config';
 import { chkPwd, chkEmail, chkDate } from 'Validation/Validation';
+import dayjs from 'dayjs';
 
 import EmailList from './EmailList';
 
@@ -17,68 +18,62 @@ const PostCreateForm = () => {
 
   const history = useHistory();
 
-  const [inputData, setInputData] = useState({
+  const [formValue, setFormValue] = useState({
     name: '',
     password: '',
     send_at: '',
   });
+  const { name, password, send_at } = formValue;
 
   const [emailText, setEmailText] = useState('');
   const [emailList, setEmailList] = useState([]);
-  const [isRadioValue, setIsRadioValue] = useState('');
+  const [isPublic, setIsPublic] = useState('');
   const [addBtnDisabled, setAddBtnDisabled] = useState(true);
   const [submitDisabled, setSubmitDisabled] = useState(true);
 
   const handleInputData = e => {
     const { name, value } = e.target;
-    setInputData({ ...inputData, [name]: value });
+    setFormValue({ ...formValue, [name]: value });
   };
 
+  // email 입력란에 텍스트가 입력되었는지 체크
   useEffect(() => {
     emailText === '' ? setAddBtnDisabled(true) : setAddBtnDisabled(false);
   }, [emailText]);
-
-  useEffect(() => {
-    if (
-      inputData.name !== '' &&
-      inputData.send_at !== '' &&
-      emailList.length !== 0 &&
-      isRadioValue === 'false' &&
-      inputData.password !== ''
-    ) {
-      setSubmitDisabled(false);
-    } else if (
-      inputData.name !== '' &&
-      inputData.send_at !== '' &&
-      emailList.length !== 0 &&
-      isRadioValue === 'true'
-    ) {
-      setSubmitDisabled(false);
-    } else if (isRadioValue === 'true' && inputData.password !== '') {
-      setInputData({
-        name: inputData.name,
-        password: '',
-        send_at: inputData.send_at,
-      });
-    } else {
-      setSubmitDisabled(true);
-    }
-  }, [
-    inputData.name,
-    inputData.password,
-    inputData.send_at,
-    emailList,
-    isRadioValue,
-  ]);
 
   const handleEmailText = e => {
     setEmailText(e.target.value);
   };
 
+  // input에 값이 입력 되었는지 체크
+  useEffect(() => {
+    const validator = value => value.length > 0;
+    const formList = [name, send_at, emailList, isPublic];
+
+    const chkForm = formList.every(validator);
+
+    if (!chkForm) return setSubmitDisabled(true);
+
+    if (isPublic === 'true') return setSubmitDisabled(false);
+    if (isPublic === 'false' && password) return setSubmitDisabled(false);
+    else return setSubmitDisabled(true);
+  }, [formValue, isPublic, emailList]);
+
+  // 라디오값 체크
   const handlePublic = radioValue => {
-    radioValue === 'true' ? setIsRadioValue('true') : setIsRadioValue('false');
+    if (radioValue === 'true') {
+      setIsPublic('true');
+      setFormValue({
+        name: name,
+        password: '',
+        send_at: send_at,
+      });
+    } else {
+      setIsPublic('false');
+    }
   };
 
+  // 이메일 입력값 체크
   const handleAddEmail = () => {
     if (!chkEmail(emailText)) {
       alert('메일 양식에 맞춰 작성해주세요.');
@@ -92,46 +87,28 @@ const PostCreateForm = () => {
     }
   };
 
+  // 작성 완료 후 제출
   const handleSubmit = async () => {
     await axios.get(`${POSTBOXES_API}`).then(res => {
       for (let item of res.data.results) {
-        if (inputData.name !== '') {
-          if (item.name === inputData.name) {
-            alert('우체통 이름이 중복됩니다.');
-            break;
-          }
-        }
-
-        if (inputData.send_at !== '') {
-          const today = new Date();
-          const dateSplit = inputData.send_at.split('-');
-          const sendAt = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);
-
-          if (!chkDate(inputData.send_at) || sendAt < today) {
-            alert('날짜를 확인해주세요.');
-            return;
-          }
-        }
-
-        if (emailList.length === 0) {
-          alert('이메일을 입력해주세요.');
-        }
-
-        if (inputData.password !== '') {
-          if (!chkPwd(inputData.password)) {
-            alert('비밀코드를 확인해주세요.');
-            return;
-          }
-        }
+        if (item.name === name) return alert('우체통 이름이 중복됩니다.');
       }
+
+      const today = dayjs().format('YYYY-MM-DD');
+
+      if (!chkDate(send_at) || send_at < today)
+        return alert('날짜를 확인해주세요.');
+
+      if (isPublic === 'false' && !chkPwd(password))
+        return alert('비밀번호를 확인해주세요.');
     });
 
     axios
       .post(`${POSTBOXES_API}`, {
-        name: inputData.name.replace(/ +/g, ' ').trim(),
-        password: inputData.password,
-        is_public: isRadioValue,
-        send_at: inputData.send_at,
+        name: formValue.name.replace(/ +/g, ' ').trim(),
+        password: formValue.password,
+        is_public: isPublic,
+        send_at: formValue.send_at,
         receivers: emailList,
       })
       .then(res => {
@@ -140,7 +117,6 @@ const PostCreateForm = () => {
           setIsModalOpen(false);
           history.push('/');
           window.location.reload();
-
           return;
         }
       });
@@ -223,7 +199,7 @@ const PostCreateForm = () => {
               type="radio"
               name="isPublicRadio"
               value="true"
-              checked={isRadioValue === 'true'}
+              checked={isPublic === 'true'}
               onChange={() => handlePublic('true')}
             />
             공개
@@ -234,14 +210,14 @@ const PostCreateForm = () => {
               type="radio"
               name="isPublicRadio"
               value="false"
-              checked={isRadioValue === 'false'}
+              checked={isPublic === 'false'}
               onChange={() => handlePublic('false')}
             />
             비공개
           </label>
         </div>
       </Container>
-      {isRadioValue === 'false' && (
+      {isPublic === 'false' && (
         <Container>
           <Title>비밀코드</Title>
           <PasswordInput

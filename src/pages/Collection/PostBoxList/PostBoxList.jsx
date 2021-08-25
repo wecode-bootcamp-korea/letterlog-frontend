@@ -1,35 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import { Modal } from 'components/Modal';
-import CollectionData from 'pages/Collection/PostBoxList/CollectionData';
-
-import { useRecoilState } from 'recoil';
-import { modalState } from 'atom';
-
-const PostBoxList = ({ nickName, imageUrl, caption }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // const [isModalOpen, setIsModalOpen] = useRecoilState(modalState);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-    document.body.style.overflow = 'hidden';
-  };
-
+const PostBoxList = ({ data, handleOpenModal }) => {
   return (
     <>
-      {isModalOpen && (
-        <Modal header="받은 메시지">
-          <CollectionData
-            nickName={nickName}
-            imageUrl={imageUrl}
-            caption={caption}
-          />
-        </Modal>
-      )}
-      <PostBox onClick={handleOpenModal}>
-        <Img alt="" src={imageUrl} />
+      <PostBox onClick={() => handleOpenModal(data)}>
+        <Img alt="" src={data.image_url} />
       </PostBox>
     </>
   );

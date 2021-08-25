@@ -37,7 +37,7 @@ const Nav = () => {
             type="search"
             placeholder="우체통을 검색해주세요."
           />
-          {isModal.type === 'create' && (
+          {isModal.type === 'create' && isModal.status && (
             <Modal header="우체통 만들기">
               <PostCreateForm isModal={isModal} />
             </Modal>
