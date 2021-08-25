@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 const PwForm = ({ handleForm, checkPw }) => {
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   const enterSubmit = e => {
     if (e.keyCode === 13) {
       checkPw();
@@ -16,6 +22,7 @@ const PwForm = ({ handleForm, checkPw }) => {
         type="password"
         name="pwInput"
         onChange={handleForm}
+        ref={inputRef}
       />
       <Footer>
         <Close onClick={checkPw}>확인</Close>
