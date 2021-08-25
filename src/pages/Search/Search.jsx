@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import { FilterCardBox } from 'pages/Search/FilterCardBox';
+import PostBoxList from 'pages/Main/PostBoxList/PostBoxList';
 import { POSTBOXES_API } from 'config';
 import { useRecoilState } from 'recoil';
 import { searchInputState } from 'atom';
@@ -23,7 +23,7 @@ const Search = () => {
 
   return (
     <Container>
-      <FilterCardBox filterPost={filterPost} />
+      <PostBoxList letterBoxList={filterPost} />
     </Container>
   );
 };
