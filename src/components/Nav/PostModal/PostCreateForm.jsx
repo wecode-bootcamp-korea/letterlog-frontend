@@ -15,6 +15,11 @@ import EmailList from './EmailList';
 const PostCreateForm = () => {
   const setIsModalOpen = useSetRecoilState(modalState);
   const emailTagHeight = useRef();
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   const history = useHistory();
 
@@ -147,6 +152,7 @@ const PostCreateForm = () => {
           placeholder="20자 이내로 지어주세요."
           maxLength="20"
           required
+          ref={inputRef}
         />
       </Container>
       <Container>
@@ -155,7 +161,7 @@ const PostCreateForm = () => {
           type="text"
           name="send_at"
           onChange={handleInputData}
-          placeholder="yyyy-mm-dd 형식으로 입력해주세요."
+          placeholder="YYYY-MM-DD 형식으로 입력해주세요."
           maxLength="10"
           required
         />
@@ -196,7 +202,7 @@ const PostCreateForm = () => {
       </EmailListContainer>
       <Line />
       <Container>
-        <Title>공개여부</Title>
+        <Title>공개 여부</Title>
         <div>
           <label htmlFor="radioPublic">
             <input
@@ -245,7 +251,7 @@ const PostCreateForm = () => {
 export default PostCreateForm;
 
 const Container = styled.div`
-  margin: 0 0 12px 0;
+  margin: 0 0 6px 0;
   text-align: right;
 
   div {
@@ -266,32 +272,49 @@ const Title = styled.p`
 
 const NameInput = styled.input`
   width: 60%;
-  padding: 0 6px;
+  padding: 4px 6px;
   margin: 0 20px;
   font-size: 14px;
   outline-style: none;
+
+  border-style: none;
+  border-bottom: 1px solid #a2a2a2;
+
+  &::placeholder {
+    color: #d0d0d0;
+  }
 `;
 
 const SendAtInput = styled.input`
   width: 60%;
-  padding: 0 6px;
+  padding: 4px 6px;
   margin: 0 20px;
   font-size: 14px;
   outline-style: none;
+
+  border-style: none;
+  border-bottom: 1px solid #a2a2a2;
+
+  &::placeholder {
+    color: #d0d0d0;
+  }
 `;
 
 const EmailInput = styled.input`
   width: 60%;
-  padding: 0 40px 0 6px;
+  padding: 4px 44px 0 6px;
   margin: 0 20px;
   font-size: 14px;
   outline-style: none;
+
+  border-style: none;
+  border-bottom: 1px solid #a2a2a2;
 `;
 
 const EmailAddBtn = styled.button`
   position: absolute;
-  top: 220px;
-  right: 48px;
+  top: 218px;
+  right: 36px;
   font-weight: 400;
   background-color: #fff;
   border-style: none;
@@ -337,9 +360,17 @@ const SubmitBtn = styled.button`
 
 const PasswordInput = styled.input`
   width: 60%;
-  padding: 0 6px;
-  margin: 0 20px;
+  padding: 4px 6px;
+  margin: 0 20px 14px;
   outline-style: none;
+  font-size: 14px;
+
+  border-style: none;
+  border-bottom: 1px solid #a2a2a2;
+
+  &::placeholder {
+    color: #d0d0d0;
+  }
 `;
 
 const Line = styled.hr`

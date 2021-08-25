@@ -116,32 +116,42 @@ const Collection = props => {
   };
 
   return (
-    <Container>
-      {isModal.type === 'collectionModal' && isModal.status && (
-        <Modal header="받은 메시지">
-          <CollectionData
-            nickName={collectionData.nickname}
-            imageUrl={collectionData.image_url}
-            caption={collectionData.caption}
-          />
-        </Modal>
-      )}
-      {collectionList.map(data => (
-        <PostBoxList handleOpenModal={handleOpenModal} data={data} />
-      ))}
-      {isModal.type === 'collectionPw' && isModal.status && (
-        <Modal header="비밀번호">
-          <PwMForm handleForm={handleForm} checkPw={checkPw} />
-        </Modal>
-      )}
-    </Container>
+    <>
+      <Title>
+        <h1>우체통에 들어있는 편지들</h1>
+      </Title>
+      <Container>
+        {isModal.type === 'collectionModal' && isModal.status && (
+          <Modal header="받은 메시지">
+            <CollectionData
+              nickName={collectionData.nickname}
+              imageUrl={collectionData.image_url}
+              caption={collectionData.caption}
+            />
+          </Modal>
+        )}
+        {collectionList.map(data => (
+          <PostBoxList handleOpenModal={handleOpenModal} data={data} />
+        ))}
+        {isModal.type === 'collectionPw' && isModal.status && (
+          <Modal header="비밀번호">
+            <PwMForm handleForm={handleForm} checkPw={checkPw} />
+          </Modal>
+        )}
+      </Container>
+    </>
   );
 };
 
 export default Collection;
 
+const Title = styled.div`
+  margin: 64px 100px;
+  font-size: 36px;
+`;
+
 const Container = styled.div`
-  margin: 140px 100px;
+  margin: 60px 100px;
   column-width: 260px;
   column-gap: 20px;
 `;
