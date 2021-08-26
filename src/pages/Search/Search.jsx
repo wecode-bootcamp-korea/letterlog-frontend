@@ -13,20 +13,20 @@ const Search = () => {
   const [searchInput] = useRecoilState(searchInputState);
 
   useEffect(() => {
-    if (!searchInput) {
-      setFilterBoxList([]);
-    } else {
+    if (!searchInput) return setFilterBoxList([]);
+    else
       axios.get(`${POSTBOXES_API}?search=${searchInput}`).then(({ data }) => {
         setFilterBoxList(data.results);
       });
-    }
   }, [searchInput]);
 
   return (
     <Container>
-      {!searchInput ? (
-        <NotKeyword>검색어를 입력해주세요.</NotKeyword>
-      ) : (
+      {!searchInput && <NotKeyword>검색어를 입력해주세요.</NotKeyword>}
+      {searchInput && filterBoxList.length === 0 && (
+        <NotKeyword>검색어와 일치하는 우체통이 없습니다.</NotKeyword>
+      )}
+      {searchInput && filterBoxList.length > 0 && (
         <PostBoxList letterBoxList={filterBoxList} />
       )}
     </Container>
