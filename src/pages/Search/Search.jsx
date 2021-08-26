@@ -13,14 +13,22 @@ const Search = () => {
   const [searchInput] = useRecoilState(searchInputState);
 
   useEffect(() => {
-    axios.get(`${POSTBOXES_API}?search=${searchInput}`).then(({ data }) => {
-      setFilterBoxList(data.results);
-    });
+    if (!searchInput) {
+      setFilterBoxList([]);
+    } else {
+      axios.get(`${POSTBOXES_API}?search=${searchInput}`).then(({ data }) => {
+        setFilterBoxList(data.results);
+      });
+    }
   }, [searchInput]);
 
   return (
     <Container>
-      <PostBoxList letterBoxList={filterBoxList} />
+      {!searchInput ? (
+        <NotKeyword>검색어를 입력해주세요.</NotKeyword>
+      ) : (
+        <PostBoxList letterBoxList={filterBoxList} />
+      )}
     </Container>
   );
 };
@@ -31,4 +39,8 @@ const Container = styled.div`
   ${props => props.theme.setFlex()}
   flex-direction: column;
   margin: 160px 0 80px;
+`;
+
+const NotKeyword = styled.div`
+  margin-top: 40px;
 `;
