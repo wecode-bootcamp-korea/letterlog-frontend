@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
 import axios from 'axios';
 import styled from 'styled-components';
-import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { modalState } from 'atom';
@@ -99,8 +98,6 @@ const PostCreateForm = () => {
         if (item.name === name) return alert('우체통 이름이 중복됩니다.');
       }
 
-      console.log(`chkPwd(password)`, chkPwd(password));
-
       const limitDay = dayjs().add(7, 'day').format('YYYY-MM-DD');
 
       if (!chkDate(send_at)) return alert('날짜 양식을 확인해주세요.');
@@ -136,6 +133,10 @@ const PostCreateForm = () => {
     e.key === 'Enter' && handleAddEmail();
   };
 
+  const SubmitKeyEnter = e => {
+    e.key === 'Enter' && handleSubmit();
+  };
+
   const removeEmail = id => {
     emailList.splice(id, 1);
     setEmailList(emailList.filter(email => email.id !== id));
@@ -149,6 +150,7 @@ const PostCreateForm = () => {
           type="text"
           name="name"
           onChange={handleInputData}
+          onKeyPress={SubmitKeyEnter}
           placeholder="20자 이내로 지어주세요."
           maxLength="20"
           required
@@ -161,6 +163,7 @@ const PostCreateForm = () => {
           type="text"
           name="send_at"
           onChange={handleInputData}
+          onKeyPress={SubmitKeyEnter}
           placeholder="YYYY-MM-DD 형식으로 입력해주세요."
           maxLength="10"
           required
@@ -176,8 +179,8 @@ const PostCreateForm = () => {
         <EmailInput
           type="text"
           onChange={handleEmailText}
-          value={emailText}
           onKeyPress={InputKeyEnter}
+          value={emailText}
           maxLength="32"
         />
         <EmailAddBtn
@@ -212,6 +215,7 @@ const PostCreateForm = () => {
               value="true"
               checked={isPublic === 'true'}
               onChange={() => handlePublic('true')}
+              onKeyPress={SubmitKeyEnter}
             />
             공개
           </label>
@@ -235,6 +239,7 @@ const PostCreateForm = () => {
             type="password"
             name="password"
             onChange={handleInputData}
+            onKeyPress={SubmitKeyEnter}
             maxLength="15"
             required
             placeholder="비밀번호는 8자 이상으로 설정해주세요."
