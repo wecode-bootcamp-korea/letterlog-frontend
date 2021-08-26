@@ -7,7 +7,7 @@ import axios from 'axios';
 
 import { Modal } from 'components/Modal';
 import PwMForm from 'components/Card/Form/PwForm';
-import { chkPwd } from 'Validation/Validation';
+import { chkPwd } from 'Validation';
 import CollectionData from 'pages/Collection/PostBoxList/CollectionData';
 
 import { POSTBOXES_API, POSTBOXES_COLLECTION_API } from 'config';

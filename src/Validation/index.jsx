@@ -1,1 +1,1 @@
-export { default as Validation } from './Validation';
+export { chkPwd, chkDate, chkEmail } from './Validation';
