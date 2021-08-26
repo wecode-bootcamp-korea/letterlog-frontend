@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { modalState, searchInputState } from 'atom';
 
 import { Modal } from 'components/Modal';
@@ -13,9 +13,9 @@ const Nav = () => {
 
   const [isModal, setIsModal] = useRecoilState(modalState);
 
-  const setSearchInput = useSetRecoilState(searchInputState);
+  const [searchInput, setSearchInput] = useRecoilState(searchInputState);
   const InputKeyEnter = e => {
-    e.key === 'Enter' && history.push('/search');
+    searchInput && e.key === 'Enter' && history.push('/search');
   };
 
   const handleModalOpen = () => {

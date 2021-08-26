@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { useRecoilState } from 'recoil';
 
-// import { useQuery } from 'react-query';
 import axios from 'axios';
 
 import { Modal } from 'components/Modal';
@@ -18,7 +17,6 @@ import { PostBoxList } from 'pages/Collection/PostBoxList';
 import { modalState } from 'atom';
 
 const Collection = props => {
-  // const { isLoading, data, error } = useQuery();
   const params = useParams();
 
   const [collectionList, setCollectionList] = useState([]);
