@@ -93,40 +93,41 @@ const PostCreateForm = () => {
 
   // 작성 완료 후 제출
   const handleSubmit = async () => {
-    await axios.get(`${POSTBOXES_API}`).then(res => {
-      for (let item of res.data.results) {
-        if (item.name === name) return alert('우체통 이름이 중복됩니다.');
-      }
+    await axios
+      .get(`${POSTBOXES_API}?search=${name}&search_option=exact`)
+      .then(res => {
+        if (res.data.results[0].name === name)
+          return alert('우체통 이름이 중복됩니다.');
 
-      const limitDay = dayjs().add(7, 'day').format('YYYY-MM-DD');
+        const limitDay = dayjs().add(7, 'day').format('YYYY-MM-DD');
 
-      if (!chkDate(send_at)) return alert('날짜 양식을 확인해주세요.');
+        if (!chkDate(send_at)) return alert('날짜 양식을 확인해주세요.');
 
-      if (send_at < limitDay)
-        return alert('날짜는 최소 일주일 뒤로 설정해주세요.');
+        if (send_at < limitDay)
+          return alert('날짜는 최소 일주일 뒤로 설정해주세요.');
 
-      if (isPublic === 'false' && !chkPwd(password)) {
-        return alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
-      } else {
-        axios
-          .post(`${POSTBOXES_API}`, {
-            name: formValue.name.replace(/ +/g, ' ').trim(),
-            password: formValue.password,
-            is_public: isPublic,
-            send_at: formValue.send_at,
-            receivers: emailList,
-          })
-          .then(res => {
-            if (res.status === 201) {
-              alert('생성 완료');
-              setIsModalOpen(false);
-              history.push('/');
-              window.location.reload();
-              return;
-            }
-          });
-      }
-    });
+        if (isPublic === 'false' && !chkPwd(password)) {
+          return alert('숫자와 영문자 조합으로 8~15자리를 사용해야 합니다.');
+        } else {
+          axios
+            .post(`${POSTBOXES_API}`, {
+              name: formValue.name.replace(/ +/g, ' ').trim(),
+              password: formValue.password,
+              is_public: isPublic,
+              send_at: formValue.send_at,
+              receivers: emailList,
+            })
+            .then(res => {
+              if (res.status === 201) {
+                alert('생성 완료');
+                setIsModalOpen(false);
+                history.push('/');
+                window.location.reload();
+                return;
+              }
+            });
+        }
+      });
   };
 
   const InputKeyEnter = e => {
