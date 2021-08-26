@@ -96,7 +96,7 @@ const PostCreateForm = () => {
     await axios
       .get(`${POSTBOXES_API}?search=${name}&search_option=exact`)
       .then(res => {
-        if (res.data.results[0].name === name)
+        if (res.data.results[0]?.name === name)
           return alert('우체통 이름이 중복됩니다.');
 
         const limitDay = dayjs().add(7, 'day').format('YYYY-MM-DD');
