@@ -8,7 +8,7 @@ import { Card } from 'components/Card';
 import Modal from 'components/Modal/Modal';
 import { PwForm, SendingForm } from 'components/Card/Form';
 import { modalState, actions } from 'atom';
-import { chkPwd } from 'Validation/Validation';
+import { chkPwd } from 'Validation';
 
 const PostBoxList = ({ letterBoxList, cardRef }) => {
   const [modalStatus, setModalStatus] = useRecoilState(modalState);

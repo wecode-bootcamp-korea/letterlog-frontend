@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil';
 
 import { modalState } from 'atom';
 import { POSTBOXES_API } from 'config';
-import { chkPwd, chkEmail, chkDate } from 'Validation/Validation';
+import { chkPwd, chkEmail, chkDate } from 'Validation';
 import dayjs from 'dayjs';
 
 import EmailList from './EmailList';
