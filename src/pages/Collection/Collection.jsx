@@ -52,19 +52,11 @@ const Collection = props => {
 
         // 우체통이 공개일 때,바로 데이터 받아오기
         if (res.data.is_public) {
-          setChkPublic({ id: res.data.id });
-
           axios
-            .post(`${POSTBOXES_API}/access`, {
-              id: chkPublic.id,
-            })
-            .then(
-              axios
-                .get(`${POSTBOXES_COLLECTION_API}?uuid=${params.q}`)
-                .then(res => {
-                  res.status === 200 && setCollectionList(res.data.results);
-                })
-            );
+            .get(`${POSTBOXES_COLLECTION_API}?uuid=${params.q}`)
+            .then(res => {
+              res.status === 200 && setCollectionList(res.data.results);
+            });
         }
       });
   }, []);

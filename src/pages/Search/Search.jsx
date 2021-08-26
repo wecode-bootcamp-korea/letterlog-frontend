@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+
 import axios from 'axios';
+import { POSTBOXES_API } from 'config';
 
 import PostBoxList from 'pages/Main/PostBoxList/PostBoxList';
-import { POSTBOXES_API } from 'config';
-import { useRecoilState } from 'recoil';
 import { searchInputState } from 'atom';
 
 const Search = () => {
-  const [letterBoxList, setLetterBoxList] = useState([]);
+  const [filterBoxList, setFilterBoxList] = useState([]);
   const [searchInput] = useRecoilState(searchInputState);
 
   useEffect(() => {
-    axios.get(`${POSTBOXES_API}`).then(({ data }) => {
-      setLetterBoxList(data.results);
+    axios.get(`${POSTBOXES_API}?search=${searchInput}`).then(({ data }) => {
+      setFilterBoxList(data.results);
     });
-  }, []);
-
-  const filterPost = letterBoxList.filter(item => {
-    return item.name.includes(searchInput.toLowerCase());
-  }, []);
+  }, [searchInput]);
 
   return (
     <Container>
-      <PostBoxList letterBoxList={filterPost} />
+      <PostBoxList letterBoxList={filterBoxList} />
     </Container>
   );
 };
