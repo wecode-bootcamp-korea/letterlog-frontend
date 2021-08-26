@@ -86,7 +86,8 @@ export default Main;
 const Container = styled.div`
   ${props => props.theme.setFlex('center', 'center')};
   flex-direction: column;
-  margin-top: 111px;
+  /* margin-top: 111px; */
+  margin-top: 120px;
   width: 100vw;
   height: 100%;
 `;

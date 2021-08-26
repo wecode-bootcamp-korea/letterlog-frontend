@@ -5,11 +5,11 @@ const CarouselData = ({ carouselData }) => {
   return (
     <Wrapper>
       <Poster>
-        <Img src={carouselData.img}></Img>
+        <Img src={carouselData.img} />
       </Poster>
       <Text>
-        <div>{carouselData.title}</div>
-        <div>{carouselData.text}</div>
+        <Title>{carouselData.title}</Title>
+        <Article>{carouselData.text}</Article>
       </Text>
     </Wrapper>
   );
@@ -22,14 +22,32 @@ const Wrapper = styled.div`
 `;
 
 const Poster = styled.div`
-  width: 50%;
+  width: 65%;
+  height: 100%;
+  overflow: hidden;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 `;
 
 const Img = styled.img`
   height: 389px;
+  width: 100%;
   object-fit: cover;
 `;
 
 const Text = styled.div`
-  width: 50%;
+  margin-top: 150px;
+  margin-left: 30px;
+  width: 35%;
+`;
+
+const Title = styled.div`
+  font-size: 60px;
+  font-weight: 600;
+`;
+
+const Article = styled.div`
+  margin-top: 15px;
+  margin-left: 10px;
+  font-size: 30px;
 `;
