@@ -14,6 +14,7 @@ const Nav = () => {
   const [isModal, setIsModal] = useRecoilState(modalState);
 
   const [searchInput, setSearchInput] = useRecoilState(searchInputState);
+
   const InputKeyEnter = e => {
     searchInput && e.key === 'Enter' && history.push('/search');
   };
@@ -34,7 +35,7 @@ const Nav = () => {
           <InputSearch
             onChange={e => setSearchInput(e.target.value)}
             onKeyPress={InputKeyEnter}
-            type="search"
+            type="text"
             placeholder="우체통을 검색해주세요."
           />
           {isModal.type === 'create' && isModal.status && (

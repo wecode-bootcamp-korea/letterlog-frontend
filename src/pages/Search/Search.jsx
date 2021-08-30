@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
+import { debounce } from 'lodash';
 
 import axios from 'axios';
 import { POSTBOXES_API } from 'config';
@@ -13,20 +14,38 @@ const Search = () => {
   const [searchInput] = useRecoilState(searchInputState);
 
   useEffect(() => {
-    if (!searchInput) return setFilterBoxList([]);
+    if (!searchInput) delaySetInput([]);
     else
-      axios.get(`${POSTBOXES_API}?search=${searchInput}`).then(({ data }) => {
-        setFilterBoxList(data.results);
-      });
+      axios
+        .get(`${POSTBOXES_API}?search=${searchInput}&search_option=naive`)
+        .then(({ data }) => {
+          delaySetInput(data.results);
+        });
   }, [searchInput]);
+
+  const delaySetInput = useCallback(
+    debounce(data => {
+      setFilterBoxList(data);
+    }, 340),
+    [filterBoxList]
+  );
 
   return (
     <Container>
-      {!searchInput && <NotKeyword>검색어를 입력해주세요.</NotKeyword>}
-      {searchInput && filterBoxList.length === 0 && (
-        <NotKeyword>검색어와 일치하는 우체통이 없습니다.</NotKeyword>
+      {/* 입력을 안했거나 검색 결과가 없을 때*/}
+      {!filterBoxList.length && (
+        <NotResult>
+          <p>...</p>
+          <NotKeyword>
+            {!searchInput
+              ? '검색어를 입력해주세요.'
+              : '검색어와 일치하는 우체통이 없습니다.'}
+          </NotKeyword>
+        </NotResult>
       )}
-      {searchInput && filterBoxList.length > 0 && (
+
+      {/* 검색 결과가 있을 경우 */}
+      {filterBoxList.length > 0 && (
         <PostBoxList letterBoxList={filterBoxList} />
       )}
     </Container>
@@ -43,4 +62,14 @@ const Container = styled.div`
 
 const NotKeyword = styled.div`
   margin-top: 40px;
+`;
+
+const NotResult = styled.div`
+  text-align: center;
+
+  p {
+    color: #d2d2d2;
+    font-size: 60px;
+    letter-spacing: 8px;
+  }
 `;
